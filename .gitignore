@@ -1,0 +1,30 @@
+m.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+.idea/
+ynDocuments/
+
+## File-based project format:
+*.iws
+*.iml
+*.ipr
+
+## Plugin-specific files:
+
+# IntelliJ
+/out/
+/target
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+src/main/resources/static/assets/
+src/main/resources/static/index.html
