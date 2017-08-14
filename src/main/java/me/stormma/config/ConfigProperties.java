@@ -13,12 +13,12 @@ public class ConfigProperties {
     public static String SERVER_ID = "smart.server_id";
 
     /**
-     * REQUEST_ID
-     */
-    public static String REQUEST_ID = "smart.request_id";
-
-    /**
      * PORT
      */
     public static String PORT = "smart.port";
+
+    /**
+     * module_name
+     */
+    public static String MODULE_NAME = "smart.module_name";
 }

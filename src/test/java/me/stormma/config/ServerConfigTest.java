@@ -18,7 +18,6 @@ public class ServerConfigTest {
 
     @Test
     public void testGetConfigField() {
-        System.out.println(ServerConfig.REQUEST_ID);
         System.out.println(ServerConfig.PORT);
         System.out.println(ServerConfig.SERVER_ID);
     }

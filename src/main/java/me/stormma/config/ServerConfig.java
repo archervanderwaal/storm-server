@@ -1,6 +1,9 @@
 package me.stormma.config;
 
+import com.google.common.base.Objects;
 import me.stormma.exception.ConfigFileNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.Properties;
@@ -18,33 +21,49 @@ public class ServerConfig {
     public static String SERVER_ID;
 
     /**
-     * REQUEST_ID
+     * module name
      */
-    public static String REQUEST_ID;
+    public static String MODULE_NAME;
 
     /**
      * PORT
      */
-    public static String PORT;
+    public static int PORT;
 
     /**
-     * properties
+     * jetty thread config
      */
-    private static Properties properties;
+    public static boolean CUSTOMIZE_THREAD_POOL = false;
 
     /**
-     * config file path
+     * max thread count
      */
-    private static String configFilePath;
+    public static int MAX_THREAD_COUNT = Integer.MAX_VALUE;
+
+    /**
+     * min thread count
+     */
+    public static int MIN_THREAD_COUNT = 1024;
+
+    /**
+     * thread time out
+     */
+    public static int THREAD_TIMEOUT = 100 * 1000;
+
+    /**
+     * io time out
+     */
+    public static int IO_TIMEOUT = 30000;
 
     /**
      * default config file path ==> path + file name, default path is 'classpath/smart.properties'
      */
     private static String DEFAULT_CONFIG_FILE_NAME = "smart.properties";
 
-    private static String getDefaultConfigFileName() {
-        return DEFAULT_CONFIG_FILE_NAME;
-    }
+    /**
+     * log
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ServerConfig.class);
 
 
     /**
@@ -53,18 +72,19 @@ public class ServerConfig {
      * @throws ConfigFileNotFoundException
      */
     public static void init(String path) throws ConfigFileNotFoundException {
-        configFilePath = path;
         InputStream configInputStream = ServerConfig.class.getClassLoader().getResourceAsStream(path);
-        properties = new Properties();
+        Properties properties = new Properties();
         try {
             properties.load(configInputStream);
         } catch (Exception e) {
-            throw new ConfigFileNotFoundException("the config file named '" + path + "' not found");
+            String eMsg = "the config file named '" + path + "' not found";
+            throw new ConfigFileNotFoundException(eMsg, e);
         }
         //init config filed
         SERVER_ID = properties.getProperty(ConfigProperties.SERVER_ID);
-        PORT = properties.getProperty(ConfigProperties.PORT);
-        REQUEST_ID = properties.getProperty(ConfigProperties.REQUEST_ID);
+        PORT = Objects.equal(null, properties.getProperty(ConfigProperties.PORT)) ?
+                                                8057 : Integer.parseInt(properties.getProperty(ConfigProperties.PORT));
+        MODULE_NAME = properties.getProperty(ConfigProperties.MODULE_NAME);
     }
 
     /**
