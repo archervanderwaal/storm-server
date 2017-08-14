@@ -1,7 +1,7 @@
 package me.stormma.http.request;
 
 import com.google.common.base.Objects;
-import me.stormma.http.service.HttpContext;
+import me.stormma.http.model.HttpContext;
 import me.stormma.http.util.HttpUtil;
 import org.slf4j.LoggerFactory;
 

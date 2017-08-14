@@ -1,4 +1,4 @@
-package me.stormma.http.service;
+package me.stormma.http.model;
 
 import me.stormma.http.util.HttpUtil;
 

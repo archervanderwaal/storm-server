@@ -1,7 +1,7 @@
 package me.stormma.http.handler;
 
 import com.google.common.base.Objects;
-import me.stormma.http.service.HttpContext;
+import me.stormma.http.model.HttpContext;
 import me.stormma.http.annotation.JsonParam;
 import me.stormma.http.annotation.RequestParam;
 import me.stormma.http.converter.Converter;

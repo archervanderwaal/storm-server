@@ -5,6 +5,7 @@ import me.stormma.SmartApplication;
 import me.stormma.config.ServerConfig;
 import me.stormma.http.handler.RequestHandler;
 import me.stormma.http.model.ExecutorBean;
+import me.stormma.http.model.HttpContext;
 import me.stormma.http.request.RequestParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,6 @@ public class ApiGateway extends HttpServlet {
     }
 
     /**
-     * 重写service实现请求的分发
      * @param req
      * @param resp
      * @throws ServletException

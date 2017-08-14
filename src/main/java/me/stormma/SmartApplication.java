@@ -101,7 +101,6 @@ public class SmartApplication {
             logger.error("server port: {} is not valid!", port);
             throw new Exception("server port: " + port + "is not valid!");
         }
-
         try {
             //初始化http 服务
             HttpService.init();
