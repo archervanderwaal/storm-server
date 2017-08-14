@@ -1,13 +1,11 @@
 package me.stormma.http.request;
 
 import com.google.common.base.Objects;
-import me.stormma.exception.SmartServerException;
-import me.stormma.http.HttpContext;
+import me.stormma.http.service.HttpContext;
 import me.stormma.http.util.HttpUtil;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.Cookie;
-import java.io.IOException;
 import java.util.Map;
 
 /**

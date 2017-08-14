@@ -2,7 +2,7 @@ package me.stormma.http.util;
 
 import com.google.common.base.Objects;
 import me.stormma.exception.SmartServerException;
-import me.stormma.http.HttpContext;
+import me.stormma.http.service.HttpContext;
 import org.eclipse.jetty.util.MultiMap;
 import org.eclipse.jetty.util.UrlEncoded;
 

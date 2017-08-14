@@ -1,4 +1,4 @@
-package me.stormma.http;
+package me.stormma.http.service;
 
 import com.google.common.base.Objects;
 import me.stormma.config.ServerConfig;
