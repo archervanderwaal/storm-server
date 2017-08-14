@@ -10,15 +10,15 @@ public class ConfigProperties {
     /**
      * SERVER_ID
      */
-    public static String SERVER_ID = "smart.server_id";
+    public static String SERVER_ID = "storm.server_id";
 
     /**
      * PORT
      */
-    public static String PORT = "smart.port";
+    public static String PORT = "storm.port";
 
     /**
      * module_name
      */
-    public static String MODULE_NAME = "smart.module_name";
+    public static String MODULE_NAME = "storm.module_name";
 }

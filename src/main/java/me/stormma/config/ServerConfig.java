@@ -56,9 +56,9 @@ public class ServerConfig {
     public static int IO_TIMEOUT = 30000;
 
     /**
-     * default config file path ==> path + file name, default path is 'classpath/smart.properties'
+     * default config file path ==> path + file name, default path is 'classpath/storm.properties'
      */
-    private static String DEFAULT_CONFIG_FILE_NAME = "smart.properties";
+    private static String DEFAULT_CONFIG_FILE_NAME = "storm.properties";
 
     /**
      * log

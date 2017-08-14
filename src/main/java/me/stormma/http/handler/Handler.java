@@ -1,4 +1,4 @@
-package me.stormma.http.model;
+package me.stormma.http.handler;
 
 import me.stormma.http.enums.RequestMethod;
 
@@ -9,11 +9,11 @@ import java.lang.reflect.Method;
  * @date 2017/8/14.
  * @description
  */
-public class ExecutorBean {
+public class Handler {
     /**
      * controller class
      */
-    private Object object;
+    private Class<?> controllerClass;
 
     /**
      * method
@@ -25,12 +25,26 @@ public class ExecutorBean {
      */
     private RequestMethod requestMethod;
 
-    public Object getObject() {
-        return object;
+    public Handler() {
     }
 
-    public void setObject(Object object) {
-        this.object = object;
+    public Handler(Class<?> controllerClass, Method method) {
+        this.controllerClass = controllerClass;
+        this.method = method;
+    }
+
+    public Handler(Class<?> controllerClass, Method method, RequestMethod requestMethod) {
+        this.controllerClass = controllerClass;
+        this.method = method;
+        this.requestMethod = requestMethod;
+    }
+
+    public Class<?> getControllerClass() {
+        return controllerClass;
+    }
+
+    public void setControllerClass(Class<?> controllerClass) {
+        this.controllerClass = controllerClass;
     }
 
     public Method getMethod() {

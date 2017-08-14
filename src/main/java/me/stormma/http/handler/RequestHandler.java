@@ -5,7 +5,6 @@ import me.stormma.http.model.HttpContext;
 import me.stormma.http.annotation.JsonParam;
 import me.stormma.http.annotation.RequestParam;
 import me.stormma.http.converter.Converter;
-import me.stormma.http.model.ExecutorBean;
 import me.stormma.http.response.Response;
 import me.stormma.http.util.JsonUtil;
 import org.slf4j.Logger;
@@ -46,7 +45,7 @@ public class RequestHandler {
      * @param context
      * @param bean
      */
-    public void handleRequest(HttpContext context, ExecutorBean bean) throws ParseException, InvocationTargetException, IllegalAccessException {
+    public void handleRequest(HttpContext context, Handler bean) throws ParseException, InvocationTargetException, IllegalAccessException, InstantiationException {
         //要执行的方法
         Method method = bean.getMethod();
         Class[] paramTypes = method.getParameterTypes();
@@ -73,9 +72,9 @@ public class RequestHandler {
 //                Convert.
             }
         }
-        Object o = method.invoke(bean.getObject(), args);
+        Object o = method.invoke(bean.getControllerClass().newInstance(), args);
     }
-    private <T> Response<T> invoke(HttpContext context, ExecutorBean bean) {
+    private <T> Response<T> invoke(HttpContext context, Handler bean) {
         return null;
     }
 }

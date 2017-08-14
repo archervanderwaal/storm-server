@@ -1,4 +1,4 @@
-package me.stormma.http.service;
+package me.stormma.http.core;
 
 import com.google.common.base.Objects;
 import me.stormma.config.ServerConfig;
@@ -68,7 +68,7 @@ public class HttpService {
      */
     public void registerFileService(String url, String subDir) throws Exception {
         if (Objects.equal(null, url)) {
-            throw new Exception("register static file service filed, the url: " + url + " is not valid");
+            throw new Exception("register static file core filed, the url: " + url + " is not valid");
         }
         ResourceHandler handler = new ResourceHandler();
         String resPath = String.format("%s/%s", ServerConfig.MODULE_NAME, subDir);
@@ -86,7 +86,7 @@ public class HttpService {
      */
     public void registFileServiceAbsolute(String url, String absoluteDirPath) throws Exception {
         if (Objects.equal(null, url)) {
-            throw new Exception("register static file service filed, the url: " + url + " is not valid");
+            throw new Exception("register static file core filed, the url: " + url + " is not valid");
         }
         ResourceHandler handler = new ResourceHandler();
         handler.setResourceBase(absoluteDirPath);
@@ -96,7 +96,7 @@ public class HttpService {
     }
 
     /**
-     * @description init http service
+     * @description init http core
      * @throws Exception
      */
     public static void init() throws Exception {

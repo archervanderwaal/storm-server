@@ -1,10 +1,11 @@
-package me.stormma.http.service;
+package me.stormma.http.core;
 
 import com.google.common.base.Objects;
-import me.stormma.SmartApplication;
+import me.stormma.StormApplication;
 import me.stormma.config.ServerConfig;
+import me.stormma.constant.StormApplicationConstant;
 import me.stormma.http.handler.RequestHandler;
-import me.stormma.http.model.ExecutorBean;
+import me.stormma.http.handler.Handler;
 import me.stormma.http.model.HttpContext;
 import me.stormma.http.request.RequestParser;
 import org.slf4j.Logger;
@@ -44,29 +45,25 @@ public class ApiGateway extends HttpServlet {
     }
 
     /**
-     * @param req
-     * @param resp
+     * @param request
+     * @param response
      * @throws ServletException
      * @throws IOException
      */
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setHeader("server_id", ServerConfig.SERVER_ID);
-        resp.setHeader("module_name", ServerConfig.MODULE_NAME);
-        HttpContext context = new HttpContext(req, resp);
-        context.requestPath = req.getPathInfo();
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setHeader("server_id", ServerConfig.SERVER_ID);
+        response.setHeader("module_name", ServerConfig.MODULE_NAME);
+        HttpContext context = new HttpContext(request, response);
+        context.requestPath = request.getPathInfo();
         RequestParser.parseRequest(context);
         context.request.setCharacterEncoding("UTF-8");
         context.response.setCharacterEncoding("UTF-8");
-        ExecutorBean bean = SmartApplication.apiMap.get(context.requestPath);
-        try {
-            RequestHandler.getInstance().handleRequest(context, bean);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        Handler handler = StormApplication.apiMap.get(context.requestPath);
+        if (Objects.equal(null, handler)) {
+            context.response.sendError(StormApplicationConstant.NOT_FOUND_HTTP_STATUS);
+            return;
         }
+        //RequestHandler.getInstance().handleRequest(context, handler);
     }
 }

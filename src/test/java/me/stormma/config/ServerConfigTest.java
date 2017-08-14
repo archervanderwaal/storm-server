@@ -13,7 +13,7 @@ public class ServerConfigTest {
     @Before
     public void initConfig() throws ConfigFileNotFoundException {
         //init config
-        ServerConfig.init("/conf/smart.properties");
+        ServerConfig.init("/conf/storm.properties");
     }
 
     @Test
