@@ -75,7 +75,6 @@ public class ApiGateway extends HttpServlet {
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //create HttpContext
         HttpContext context = createHttpContext(request, response);
-
         Handler handler = handlerMapping.getHandler(context);
         if (Objects.equal(null, handler)) {
             if (handleOptionsRequest(context)) {
@@ -88,7 +87,11 @@ public class ApiGateway extends HttpServlet {
                                                                             .getBytes(StormApplicationConstant.UTF_8));
             return;
         }
-
+        try {
+            //处理请求
+            handlerInvoker.invoke(context, handler);
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -117,16 +120,13 @@ public class ApiGateway extends HttpServlet {
     /**
      * @description 处理options的请求
      */
-    private boolean handleOptionsRequest(HttpContext context) {
+    private boolean handleOptionsRequest(HttpContext context) throws IOException {
+        //return ok
         if (Objects.equal(RequestMethod.OPTIONS, context.requestMethod)) {
-            if (handlerMapping.validateRequestPath(context)) {
-                context.response.setStatus(StormApplicationConstant.OK_HTTP_STATUS);
-            } else {
-                context.response.setStatus(StormApplicationConstant.NOT_FOUND_HTTP_STATUS);
-            }
+            context.response.setStatus(StormApplicationConstant.OK_HTTP_STATUS);
+            context.response.getOutputStream().write("OK".getBytes());
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 }

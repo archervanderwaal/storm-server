@@ -1,7 +1,7 @@
 package me.stormma.http.util;
 
 import com.google.common.base.Objects;
-import me.stormma.exception.SmartServerException;
+import me.stormma.exception.StormServerException;
 import me.stormma.http.model.HttpContext;
 import org.eclipse.jetty.util.MultiMap;
 import org.eclipse.jetty.util.UrlEncoded;
@@ -9,10 +9,7 @@ import org.eclipse.jetty.util.UrlEncoded;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author stormma
@@ -40,12 +37,7 @@ public class HttpUtil {
         return ip;
     }
 
-    /**
-     * @param queryString
-     * @return
-     * @description 解析query string
-     */
-    public static Map<String, String> parseQueryString(String queryString) {
+    public static Map<String, Object> parseQueryString(String queryString) {
         if (Objects.equal(null, queryString) || Objects.equal(0, queryString.length())) {
             return null;
         }
@@ -55,11 +47,16 @@ public class HttpUtil {
         if (Objects.equal(0, param.size())) {
             return null;
         }
-        Map<String, String> data = new HashMap<String, String>();
+        Map<String, Object> data = new HashMap<String, Object>();
         Enumeration<String> enumeration = Collections.enumeration(param.keySet());
         while (enumeration.hasMoreElements()) {
             String name = enumeration.nextElement();
-            data.put(name, param.getValue(name, 0));
+            List<String> values = param.getValues(name);
+            if (Objects.equal(null, values)) {
+                data.put(name, param.getValue(name, 0));
+            } else {
+                data.put(name, values);
+            }
         }
         return data;
     }
@@ -71,10 +68,10 @@ public class HttpUtil {
      * @description 读取body的数据
      */
     public static byte[] readDataFromRequestBody(HttpContext context, long MAX_REQUEST_BODY_LENGTH)
-            throws SmartServerException, IOException {
+            throws StormServerException, IOException {
         int bodySize = context.request.getContentLength();
         if (bodySize > MAX_REQUEST_BODY_LENGTH) {
-            throw new SmartServerException("request body too large, length: " + bodySize);
+            throw new StormServerException("request body too large, length: " + bodySize);
         } else if (Objects.equal(-1, bodySize)) {
             bodySize = 0;
         }
@@ -90,7 +87,7 @@ public class HttpUtil {
         }
 
         if (pos != bodySize) {
-            throw new SmartServerException(String.format("Client sent less data than expected, expected: %s cur: %s",
+            throw new StormServerException(String.format("Client sent less data than expected, expected: %s cur: %s",
                     bodySize, pos));
         }
         return body;

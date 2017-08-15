@@ -3,20 +3,12 @@ package me.stormma;
 import com.google.common.base.Objects;
 import me.stormma.config.ServerConfig;
 import me.stormma.exception.ConfigFileNotFoundException;
+import me.stormma.http.converter.ConverterCenter;
 import me.stormma.http.core.ApiGateway;
 import me.stormma.http.core.HttpService;
-import me.stormma.http.annotation.Api;
-import me.stormma.http.annotation.Controller;
-import me.stormma.http.handler.Handler;
 import me.stormma.http.helper.ApplicationHelper;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -49,6 +41,8 @@ public class StormApplication {
         //设置所有的请求交由总网关处理
         HttpService.getInstance().registerServlet("/", apiGateway);
         ApplicationHelper.logApiMap(application.logger);
+        //启动转换器
+        ConverterCenter.init();
         HttpService.startJettyServer();
     }
 
