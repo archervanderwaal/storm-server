@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * @author stormma
  * @date 2017/8/13.
- * @description smart server 启动类
+ * @description storm server 启动类
  */
 public class StormApplication {
 
@@ -49,7 +49,7 @@ public class StormApplication {
         //设置所有的请求交由总网关处理
         HttpService.getInstance().registerServlet("/", apiGateway);
         ApplicationHelper.logApiMap(application.logger);
-        HttpService.getInstance().startJettyServer();
+        HttpService.startJettyServer();
     }
 
     /**

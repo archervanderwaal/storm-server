@@ -53,7 +53,7 @@ public class RequestHandler {
         Parameter[] parameters = method.getParameters();
         for (Parameter parameter : parameters) {
             if (!Objects.equal(null, parameter.getAnnotation(JsonParam.class))) {
-                args.add(JsonUtil.byteArrayConvert2JavaBean(context.requestBody, parameter.getType()));
+                //args.add(JsonUtil.byteArrayConvert2JavaBean(context.requestBody, parameter.getType()));
             }
             if (!Objects.equal(null, parameter.getAnnotation(RequestParam.class))) {
                 RequestParam requestParam = parameter.getAnnotation(RequestParam.class);

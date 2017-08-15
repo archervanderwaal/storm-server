@@ -17,22 +17,6 @@ import java.util.List;
  */
 public class DefaultHandleInvoker implements HandlerInvoker {
 
-    private static DefaultHandleInvoker instance;
-
-    private DefaultHandleInvoker() {
-    }
-
-    public static HandlerInvoker getInstance() {
-        if (Objects.equal(null, instance)) {
-            synchronized (DefaultHandleInvoker.class) {
-                if (Objects.equal(null, instance)) {
-                    instance = new DefaultHandleInvoker();
-                }
-            }
-        }
-        return instance;
-    }
-
     /**
      * @param context
      * @param handler

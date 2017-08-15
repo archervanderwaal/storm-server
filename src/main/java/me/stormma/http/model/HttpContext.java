@@ -1,5 +1,6 @@
 package me.stormma.http.model;
 
+import me.stormma.http.enums.RequestMethod;
 import me.stormma.http.util.HttpUtil;
 
 import javax.servlet.http.Cookie;
@@ -28,6 +29,11 @@ public class HttpContext {
      * response
      */
     public HttpServletResponse response;
+
+    /**
+     * request method
+     */
+    public RequestMethod requestMethod;
 
     /**
      * user_agent
@@ -85,6 +91,25 @@ public class HttpContext {
         this.ip = HttpUtil.getRealIp(request);
         this.requestStartTime = System.currentTimeMillis();
         this.params = new HashMap<String, Object>();
+        switch (request.getMethod().toUpperCase()) {
+            case "GET":
+                this.requestMethod = RequestMethod.GET;
+                break;
+            case "POST":
+                this.requestMethod = RequestMethod.POST;
+                break;
+            case "PUT":
+                this.requestMethod = RequestMethod.PUT;
+                break;
+            case "DELETE":
+                this.requestMethod = RequestMethod.DELETE;
+                break;
+            case "OPTIONS":
+                this.requestMethod = RequestMethod.OPTIONS;
+                break;
+            default:
+                break;
+        }
     }
 
     public HttpContext(HttpServletRequest request, HttpServletResponse response, String moduleName) {
@@ -94,5 +119,24 @@ public class HttpContext {
         this.ip = HttpUtil.getRealIp(request);
         this.requestStartTime = System.currentTimeMillis();
         this.params = new HashMap<String, Object>();
+        switch (request.getMethod().toUpperCase()) {
+            case "GET":
+                this.requestMethod = RequestMethod.GET;
+                break;
+            case "POST":
+                this.requestMethod = RequestMethod.POST;
+                break;
+            case "PUT":
+                this.requestMethod = RequestMethod.PUT;
+                break;
+            case "DELETE":
+                this.requestMethod = RequestMethod.DELETE;
+                break;
+            case "OPTIONS":
+                this.requestMethod = RequestMethod.OPTIONS;
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -5,6 +5,7 @@ import me.stormma.http.enums.RequestMethod;
 import me.stormma.http.handler.Handler;
 import me.stormma.http.handler.mapping.HandlerMapping;
 import me.stormma.http.helper.ApplicationHelper;
+import me.stormma.http.model.HttpContext;
 
 import java.util.Map;
 
@@ -15,42 +16,40 @@ import java.util.Map;
  */
 public class DefaultHandlerMapping implements HandlerMapping {
 
-    private static DefaultHandlerMapping instance;
-
-    private DefaultHandlerMapping() {
-    }
-
-    public static HandlerMapping getInstance() {
-        if (Objects.equal(null, instance)) {
-            synchronized (DefaultHandlerMapping.class) {
-                if (Objects.equal(null, instance)) {
-                    instance = new DefaultHandlerMapping();
-                }
-            }
-        }
-        return instance;
-    }
+    private static final Map<String, Handler> apiMap = ApplicationHelper.listApiMap();
 
     /**
-     * @param requestMethod
-     * @param url
+     * @param context
      * @return
      * @description 获得handler
      */
     @Override
-    public Handler getHandler(RequestMethod requestMethod, String url) {
-        Map<String, Handler> apiMap = ApplicationHelper.listApiMap();
-        Handler handler = apiMap.get(url);
+    public Handler getHandler(HttpContext context) {
+        Handler handler = apiMap.get(context.requestPath);
+        if (Objects.equal(null, handler)) {
+            return null;
+        }
         if (Objects.equal(null, handler.getMethod())) {
             //默认支持GET和POST方法
-            if (Objects.equal(requestMethod, RequestMethod.GET) || Objects.equal(requestMethod, RequestMethod.POST)) {
+            if (Objects.equal(context.requestMethod, RequestMethod.GET) ||
+                                                        Objects.equal(context.requestMethod, RequestMethod.POST)) {
                 return handler;
             }
         } else {
-            if (Objects.equal(requestMethod, handler.getMethod())) {
+            if (Objects.equal(context.requestMethod, handler.getMethod())) {
                 return handler;
             }
         }
         return null;
+    }
+
+    /**
+     * @description 验证requestPath下是否有资源
+     * @param context
+     * @return
+     */
+    @Override
+    public boolean validateRequestPath(HttpContext context) {
+        return Objects.equal(null, apiMap.get(context.requestPath)) ? false : true;
     }
 }

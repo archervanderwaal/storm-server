@@ -13,15 +13,16 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
     <properties>
-        <jetty-version>9.2.22.v20170606</jetty-version>
+        <jetty.version>9.2.22.v20170606</jetty.version>
+        <jackson.version>1.9.13</jackson.version>
     </properties>
 
 
@@ -91,14 +92,14 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>${jetty-version}</version>
+            <version>${jetty.version}</version>
         </dependency>
 
         <!--jetty-servlet-->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
-            <version>${jetty-version}</version>
+            <version>${jetty.version}</version>
         </dependency>
 
         <!--reflections-->
@@ -108,11 +109,16 @@
             <version>0.9.10</version>
         </dependency>
 
-        <!--fast json-->
+        <!-- Jackson -->
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.16</version>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-jaxrs</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
     </dependencies>
 </project>

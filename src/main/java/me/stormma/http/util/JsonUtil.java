@@ -1,7 +1,8 @@
 package me.stormma.http.util;
 
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Objects;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author stormma
@@ -9,16 +10,44 @@ import com.google.common.base.Objects;
  * @description json util
  */
 public class JsonUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(JsonUtil.class);
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
     /**
-     * @description byte数组转换成java bean
+     * @description Java对象转换成字符串
+     * @param obj
+     * @param <T>
      * @return
      */
-    public static <T>  T byteArrayConvert2JavaBean (byte[] data, Class target) {
-        if (Objects.equal(null, data) && Objects.equal(null, target)) {
-            String jsonStr = new String(data);
-            return (T) JSONObject.parseObject(jsonStr, target);
+    public static <T> String objConvert2JsonStr(T obj) {
+        String jsonStr;
+        try {
+            jsonStr = objectMapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            logger.error("java object convert to json string failed: {}", e.getMessage());
+            throw new RuntimeException(e);
         }
-        return null;
+        return jsonStr;
+    }
+
+    /**
+     * @description json string convert 2 java object
+     * @param json
+     * @param type
+     * @param <T>
+     * @return
+     */
+    public static <T> T jsonStrConvert2Obj(String json, Class<T> type) {
+        T obj;
+        try {
+            obj = objectMapper.readValue(json, type);
+        } catch (Exception e) {
+            logger.error("json string convert to java object failed: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+        return obj;
     }
 }
 
