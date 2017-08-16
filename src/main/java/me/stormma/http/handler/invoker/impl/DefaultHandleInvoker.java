@@ -5,6 +5,8 @@ import com.google.common.collect.Lists;
 import me.stormma.exception.StormServerException;
 import me.stormma.http.annotation.RequestParam;
 import me.stormma.http.converter.ConverterCenter;
+import me.stormma.http.converter.impl.StringToBooleanConverter;
+import me.stormma.http.converter.impl.StringToNumberConverter;
 import me.stormma.http.enums.RequestMethod;
 import me.stormma.http.handler.Handler;
 import me.stormma.http.handler.invoker.HandlerInvoker;
@@ -13,6 +15,7 @@ import me.stormma.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -84,21 +87,7 @@ public class DefaultHandleInvoker implements HandlerInvoker {
                     params.add(context.params.get(name));
                     continue;
                 }
-                //参数类型不是String,判断是否是转换器中可以转换的类型
-                for (Class type : converterMap.keySet()) {
-                    String value = (String) context.params.get(name);
-                    if (type.isAssignableFrom(parameterType)) {
-                        try {
-                            Class converterClass = converterMap.get(type);
-                            Object result = converterClass.getMethod("convert", String.class)
-                                                                        .invoke(converterClass.newInstance(), value);
-                            params.add(result);
-                        } catch (Exception e) {
-                            logger.error("storm server get converter's convert method failed: {}", e.getMessage());
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }
+                //
             }
         }
         return null;
@@ -129,5 +118,36 @@ public class DefaultHandleInvoker implements HandlerInvoker {
             String message = String.format("因为参数个数不匹配，所以无法调用 Action 方法！原始参数个数：%d，实际参数个数：%d", actionMethodParameterTypes.length, actionMethodParamList.size());
             throw new RuntimeException(message);
         }
+    }
+
+    /**
+     * @description String转换成其他支持的类型
+     * @param source
+     * @param paramType
+     * @return
+     */
+    private Object stringConvert2OtherType(String source, Class<?> paramType) throws StormServerException {
+        Map<Class, Class> converterMap = ConverterCenter.convertMap;
+        Object result = null;
+        //参数类型不是String,判断是否是转换器中可以转换的类型
+        for (Class type : converterMap.keySet()) {
+            if (type.isAssignableFrom(paramType)) {
+                try {
+                    Class converterClass = converterMap.get(type);
+                    Method method = converterClass.getMethod("convert", String.class);
+                    Object instance = null;
+                    if (type == Number.class) {
+                        instance = converterClass.getConstructor(Class.class).newInstance(paramType);
+                    } else {
+                        instance = converterClass.newInstance();
+                    }
+                    result = method.invoke(instance, source);
+                } catch (Exception e) {
+                    logger.error("storm server get converter's convert method failed: {}", e.getMessage());
+                    throw new StormServerException(e);
+                }
+            }
+        }
+        return result;
     }
 }
