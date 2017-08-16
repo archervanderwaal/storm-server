@@ -15,10 +15,7 @@ import me.stormma.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -46,7 +43,14 @@ public class DefaultHandleInvoker implements HandlerInvoker {
         List<Object> methodParams = listMethodParam(context, handler);
     }
 
-    private List<Object> listMethodParam(HttpContext context, Handler handler) {
+    /**
+     * @description 自动绑定参数
+     * @param context
+     * @param handler
+     * @return
+     * @throws StormServerException
+     */
+    private List<Object> listMethodParam(HttpContext context, Handler handler) throws StormServerException {
         Map<Class, Class> converterMap = ConverterCenter.convertMap;
         List<Object> params = new ArrayList<Object>();
         Method method = handler.getMethod();
@@ -55,18 +59,39 @@ public class DefaultHandleInvoker implements HandlerInvoker {
             //如果是RequestParam
             if (!Objects.equal(null, parameter.getAnnotation(RequestParam.class))) {
                 RequestParam requestParam = parameter.getAnnotation(RequestParam.class);
+                //参数名字
                 String name = requestParam.name();
+                //参数是否必需
                 boolean required = requestParam.required();
+                //如果@RequestParam未指定name属性，那么直接抛出异常
                 if (StringUtils.isEmpty(name)) {
                     logger.error("RequestParam annotation is Illegal, don't have name property");
                     throw new RuntimeException("RequestParam annotation is Illegal, don't have name property");
                 }
-                //必需的参数不存在
+                //前端未传的参数并且是必需参数
                 if (Objects.equal(null, context.params.get(name)) && required) {
                     logger.error("the required param: {} not found", name);
                     throw new RuntimeException(String.format("the required param: %s not found", name));
                 }
+                Type type = parameter.getParameterizedType();
+                //参数的类型
                 Class<?> parameterType = parameter.getType();
+                //判断接收参数的是不是集合类型
+                if (Collections.class.isAssignableFrom(parameterType)) {
+                    Type actualType;
+                    //如果是的话, 接着判断是不是泛型类型
+                    if (type instanceof ParameterizedType) {
+                        Type[] types = ((ParameterizedType) type).getActualTypeArguments();
+                        if (types.length > 1) {
+                            //@RequestParam不支持泛型实际参数为多个的情况，暂不支持
+                            throw new StormServerException(String.format("%s is not valid", parameter));
+                        }
+                        actualType = types[0];
+                    } else { //如果不是泛型类型
+                        actualType = String.class;
+                    }
+                }
+
                 //如果query类型的参数是List
                 if (context.params.get(name) instanceof List) {
                     List valueList = (List) context.params.get(name);
@@ -78,7 +103,7 @@ public class DefaultHandleInvoker implements HandlerInvoker {
 
                         params.add(valueList);
                     } else if (Set.class.isAssignableFrom(parameterType)) {
-                        //Set<S
+//                        Set
                     }
                 }
 
@@ -87,7 +112,7 @@ public class DefaultHandleInvoker implements HandlerInvoker {
                     params.add(context.params.get(name));
                     continue;
                 }
-                //
+
             }
         }
         return null;
@@ -111,6 +136,11 @@ public class DefaultHandleInvoker implements HandlerInvoker {
         return method.invoke(controllerInstance);
     }
 
+    /**
+     * @description 检查参数
+     * @param actionMethod
+     * @param actionMethodParamList
+     */
     private void checkParams(Method actionMethod, List<Object> actionMethodParamList) {
         // 判断 Action 方法参数的个数是否匹配
         Class<?>[] actionMethodParameterTypes = actionMethod.getParameterTypes();
@@ -129,6 +159,7 @@ public class DefaultHandleInvoker implements HandlerInvoker {
     private Object stringConvert2OtherType(String source, Class<?> paramType) throws StormServerException {
         Map<Class, Class> converterMap = ConverterCenter.convertMap;
         Object result = null;
+        converterMap.put(Number.class, StringToNumberConverter.class);
         //参数类型不是String,判断是否是转换器中可以转换的类型
         for (Class type : converterMap.keySet()) {
             if (type.isAssignableFrom(paramType)) {
@@ -149,5 +180,30 @@ public class DefaultHandleInvoker implements HandlerInvoker {
             }
         }
         return result;
+    }
+
+    /**
+     * @description List<String> 转换成其他集合类型的泛型类参数比如， Set<Integer>
+     * @param actualType
+     * @param paramType
+     * @param params
+     * @return
+     */
+    private Object convert2CollectionType(Type actualType, Class<?> paramType, List<String> params) throws StormServerException {
+        if (Objects.equal(null, actualType)) {
+            actualType = String.class;
+        }
+        List<Object> data = new ArrayList<Object>();
+        //遍历参数
+        for (String param : params) {
+            data.add(stringConvert2OtherType(param, (Class<?>) actualType));
+        }
+        if (paramType == List.class || List.class.isAssignableFrom(paramType)) {
+            return data;
+        }
+        if (paramType == Set.class || Set.class.isAssignableFrom(paramType)) {
+            return new HashSet<>(data);
+        }
+        throw new StormServerException(String.format("%s not supported convert.", paramType));
     }
 }

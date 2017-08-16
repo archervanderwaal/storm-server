@@ -22,7 +22,7 @@ public class NumberUtilTest {
     private static final Logger logger = LoggerFactory.getLogger(NumberUtil.class);
 
 //    @Test
-    public void testParseNumber(String[] ls, List<String> ids) throws IllegalAccessException, InstantiationException {
+    public void testParseNumber(String[] ls, List<String> ids, int s) throws IllegalAccessException, InstantiationException {
         String number = "1234";
         logger.info("测试结果: {}", NumberUtil.parseNumber(number, Double.class));
         logger.info("{}", String.class.isAssignableFrom(String.class));
@@ -30,16 +30,14 @@ public class NumberUtilTest {
 
     @Test
     public void test() throws NoSuchMethodException {
-        Method method = NumberUtilTest.class.getMethod("testParseNumber", String[].class, List.class);
-        Type[] types = method.getGenericParameterTypes();
-        for (Type type : types) {
+        Method method = NumberUtilTest.class.getMethod("testParseNumber", String[].class, List.class, int.class);
+        Parameter[] parameters = method.getParameters();
+        for (Parameter parameter : parameters) {
+            Type type = parameter.getParameterizedType();
+            //判断是否是泛型类型
             if (type instanceof ParameterizedType) {
-                Type[] typesss = ((ParameterizedType) type).getActualTypeArguments();
-                for (Type type1 : typesss) {
-                    System.out.println(type1);
-                }
+                System.out.println(type);
             }
-            System.out.println(type);
         }
     }
 }
