@@ -37,22 +37,27 @@ public class HttpUtil {
         return ip;
     }
 
+    /**
+     * @description 解析url参数
+     * @param queryString
+     * @return
+     */
     public static Map<String, Object> parseQueryString(String queryString) {
         if (Objects.equal(null, queryString) || Objects.equal(0, queryString.length())) {
             return null;
         }
-        MultiMap<String> param = new MultiMap<String>();
+        MultiMap<String> param = new MultiMap<>();
         byte[] bytes = queryString.getBytes();
         UrlEncoded.decodeUtf8To(bytes, 0, queryString.length(), param);
         if (Objects.equal(0, param.size())) {
             return null;
         }
-        Map<String, Object> data = new HashMap<String, Object>();
+        Map<String, Object> data = new HashMap<>();
         Enumeration<String> enumeration = Collections.enumeration(param.keySet());
         while (enumeration.hasMoreElements()) {
             String name = enumeration.nextElement();
             List<String> values = param.getValues(name);
-            if (Objects.equal(null, values)) {
+            if (Objects.equal(1, values.size())) {
                 data.put(name, param.getValue(name, 0));
             } else {
                 data.put(name, values);

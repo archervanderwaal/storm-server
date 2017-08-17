@@ -84,22 +84,28 @@ public class ApiGateway extends HttpServlet {
             Response<String> responseData = ResponseBuilder.fail(StormApplicationConstant.NOT_FOUND_HTTP_STATUS_DESC);
             //response 404 http status and return json data
             context.response.getOutputStream().write(JsonUtil.objConvert2JsonStr(responseData)
-                                                                            .getBytes(StormApplicationConstant.UTF_8));
+                    .getBytes(StormApplicationConstant.UTF_8));
             return;
         }
+        Object result;
+        //处理请求
         try {
-            //处理请求
-            handlerInvoker.invoke(context, handler);
+            result = handlerInvoker.invoke(context, handler);
         } catch (Exception e) {
+            logger.error("invoke " + handler.getMethod() + " failed, " + e.getMessage());
+            throw new RuntimeException(e);
         }
+        //返回请求结果
+        context.response.setStatus(StormApplicationConstant.OK_HTTP_STATUS);
+        context.response.getOutputStream().write(JsonUtil.objConvert2JsonStr(result).getBytes(StormApplicationConstant.UTF_8));
     }
 
     /**
-     * @description 创建HttpContext
      * @param request
      * @param response
      * @return
      * @throws UnsupportedEncodingException
+     * @description 创建HttpContext
      */
     private HttpContext createHttpContext(HttpServletRequest request, HttpServletResponse response) {
         HttpContext context = new HttpContext(request, response);

@@ -36,7 +36,7 @@ public class DefaultHandlerMapping implements HandlerMapping {
                 return handler;
             }
         } else {
-            if (Objects.equal(context.requestMethod, handler.getMethod())) {
+            if (Objects.equal(context.requestMethod, handler.getRequestMethod())) {
                 return handler;
             }
         }

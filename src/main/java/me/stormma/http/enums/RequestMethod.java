@@ -5,5 +5,9 @@ package me.stormma.http.enums;
  * @date 2017/8/13.
  */
 public enum RequestMethod {
-    GET, POST, DELETE, PUT, OPTIONS
+    GET,
+    POST,
+    DELETE,
+    PUT,
+    OPTIONS
 }

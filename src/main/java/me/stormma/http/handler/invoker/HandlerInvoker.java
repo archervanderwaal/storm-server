@@ -14,6 +14,7 @@ public interface HandlerInvoker {
      * @description invoke handler
      * @param context
      * @param handler
+     * @return 调用结果
      */
-    void invoke(HttpContext context, Handler handler) throws Exception;
+    Object invoke(HttpContext context, Handler handler) throws Exception;
 }

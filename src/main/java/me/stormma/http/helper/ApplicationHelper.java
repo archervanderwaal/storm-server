@@ -22,7 +22,7 @@ public class ApplicationHelper {
     /**
      * api map
      */
-    private static final Map<String, Handler> apiMap = new LinkedHashMap<String, Handler>();
+    private static final Map<String, Handler> apiMap = new LinkedHashMap<>();
 
     /**
      * @param basePackageName

@@ -33,10 +33,8 @@ public class StormApplication {
      */
     public static void run(String[] args, String basePackageName) throws Exception {
         String configFilePath = !Objects.equal(null, args) && args.length > 1 ? args[0] : null;
-        //init config
         application = new StormApplication(configFilePath);
         apiGateway = ApiGateway.getInstance();
-        //start core
         application.startService(basePackageName);
         //设置所有的请求交由总网关处理
         HttpService.getInstance().registerServlet("/", apiGateway);

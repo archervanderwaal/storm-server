@@ -16,7 +16,7 @@ public @interface RequestParam {
     /**
      *  参数名字
      */
-    String name() default "";
+    String name();
 
     /**
      * 是否是必须参数，默认是

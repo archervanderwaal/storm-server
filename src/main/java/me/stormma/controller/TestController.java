@@ -20,9 +20,8 @@ import java.util.Date;
 public class TestController {
     private static final Logger logger = LoggerFactory.getLogger(TestController.class);
     @Api(url = "/host", method = RequestMethod.GET)
-    public Response<String> test(@RequestParam(name = "name") String is, @RequestParam(name = "startDate")Date startDate) {
-        System.out.println(is);
-        logger.info("测试==>{}", "127.0.0.1");
-        return ResponseBuilder.success("127.0.0.1");
+    public Response<String> test(@RequestParam(name = "name") String name) {
+        System.out.println(name);
+        return ResponseBuilder.success(name);
     }
 }
