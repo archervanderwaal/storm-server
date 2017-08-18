@@ -4,7 +4,7 @@ import com.google.common.base.Objects;
 import me.stormma.exception.StormServerException;
 import me.stormma.http.annotation.JsonParam;
 import me.stormma.http.annotation.RequestParam;
-import me.stormma.http.converter.ConverterCenter;
+import me.stormma.converter.ConverterCenter;
 import me.stormma.http.model.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

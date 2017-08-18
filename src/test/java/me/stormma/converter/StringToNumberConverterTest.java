@@ -1,6 +1,7 @@
 package me.stormma.converter;
 
-import me.stormma.http.converter.impl.StringToNumberConverter;
+import me.stormma.converter.impl.StringToNumberConverter;
+import me.stormma.exception.StormServerException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ public class StringToNumberConverterTest {
     private static final Logger logger = LoggerFactory.getLogger(StringToNumberConverterTest.class);
 
     @Test
-    public void testConvert() {
+    public void testConvert() throws StormServerException {
         String source = "122333";
         logger.info("测试结果:{}", new StringToNumberConverter(Integer.class).convert(source));
     }

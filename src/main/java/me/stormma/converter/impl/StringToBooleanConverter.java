@@ -1,9 +1,10 @@
-package me.stormma.http.converter.impl;
+package me.stormma.converter.impl;
 
-import me.stormma.http.converter.Converter;
+import me.stormma.converter.Converter;
+import me.stormma.exception.StormServerException;
+import me.stormma.util.StringUtils;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -22,9 +23,9 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * @description 转换
      */
     @Override
-    public Boolean convert(String source) {
+    public Boolean convert(String source) throws StormServerException {
         String value = source.trim();
-        if("".equals(value)) {
+        if(StringUtils.isEmpty(value)) {
             return null;
         } else {
             value = value.toLowerCase();
@@ -33,7 +34,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
             } else if(falseValues.contains(value)) {
                 return Boolean.FALSE;
             } else {
-                throw new IllegalArgumentException("Invalid boolean value '" + source + "'");
+                throw new StormServerException(String.format("Invalid boolean value ' %s '", source));
             }
         }
     }

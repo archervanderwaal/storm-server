@@ -22,7 +22,7 @@ public class InstancePool {
     /**
      * save instance
      */
-    private static final Map<String, Object> instancePool = new ConcurrentHashMap<String, Object>();
+    private static final Map<String, Object> instancePool = new ConcurrentHashMap<>();
 
     /**
      * HandlerMapping
@@ -51,8 +51,8 @@ public class InstancePool {
             return instance;
         } catch (Exception e) {
             logger.error("get instance failed: {}", e.getMessage());
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     /**

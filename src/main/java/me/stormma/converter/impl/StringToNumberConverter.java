@@ -1,6 +1,7 @@
-package me.stormma.http.converter.impl;
+package me.stormma.converter.impl;
 
-import me.stormma.http.converter.Converter;
+import me.stormma.converter.Converter;
+import me.stormma.exception.StormServerException;
 import me.stormma.util.NumberUtil;
 
 import java.util.Objects;
@@ -19,7 +20,7 @@ public class StringToNumberConverter<T extends Number> implements Converter<Stri
      * @return
      */
     @Override
-    public T convert(String source) {
+    public T convert(String source) throws StormServerException {
         return Objects.equals(null, source.length()) ? null : NumberUtil.parseNumber(source, this.targetType);
     }
 

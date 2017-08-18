@@ -1,5 +1,6 @@
 package me.stormma.util;
 
+import me.stormma.exception.StormServerException;
 import me.stormma.http.annotation.JsonParam;
 import me.stormma.http.annotation.PathVariable;
 import org.junit.Test;
@@ -22,7 +23,7 @@ public class NumberUtilTest {
     private static final Logger logger = LoggerFactory.getLogger(NumberUtil.class);
 
 //    @Test
-    public void testParseNumber(Integer[] s) throws IllegalAccessException, InstantiationException {
+    public void testParseNumber(Integer[] s) throws IllegalAccessException, InstantiationException, StormServerException {
         String number = "1234";
         logger.info("测试结果: {}", NumberUtil.parseNumber(number, Double.class));
         logger.info("{}", String.class.isAssignableFrom(String.class));
@@ -39,5 +40,6 @@ public class NumberUtilTest {
             }
             System.out.println(paramType);
         }
+        System.out.println("2017-12-31".matches("^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)$"));
     }
 }

@@ -2,6 +2,7 @@ package me.stormma.http.core;
 
 import com.google.common.base.Objects;
 import me.stormma.config.ServerConfig;
+import me.stormma.exception.StormServerException;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -66,9 +67,9 @@ public class HttpService {
      * @param subDir
      * @throws Exception
      */
-    public void registerFileService(String url, String subDir) throws Exception {
+    public void registerFileService(String url, String subDir) throws StormServerException {
         if (Objects.equal(null, url)) {
-            throw new Exception("register static file core filed, the url: " + url + " is not valid");
+            throw new StormServerException("register static file core filed, the url: " + url + " is not valid");
         }
         ResourceHandler handler = new ResourceHandler();
         String resPath = String.format("%s/%s", ServerConfig.MODULE_NAME, subDir);
@@ -84,9 +85,9 @@ public class HttpService {
      * @param absoluteDirPath
      * @throws Exception
      */
-    public void registFileServiceAbsolute(String url, String absoluteDirPath) throws Exception {
+    public void registFileServiceAbsolute(String url, String absoluteDirPath) throws StormServerException {
         if (Objects.equal(null, url)) {
-            throw new Exception("register static file core filed, the url: " + url + " is not valid");
+            throw new StormServerException("register static file core filed, the url: " + url + " is not valid");
         }
         ResourceHandler handler = new ResourceHandler();
         handler.setResourceBase(absoluteDirPath);
@@ -111,7 +112,6 @@ public class HttpService {
             pool.setMinThreads(ServerConfig.MIN_THREAD_COUNT);
             pool.setIdleTimeout(ServerConfig.THREAD_TIMEOUT);
         }
-
         jettyServer = new Server(pool);
         HttpConfiguration httpConfig = new HttpConfiguration();
         httpConfig.addCustomizer(new ForwardedRequestCustomizer());
@@ -120,12 +120,12 @@ public class HttpService {
         http.setPort(ServerConfig.PORT);
         http.setIdleTimeout(ServerConfig.IO_TIMEOUT);
         jettyServer.addConnector(http);
-        handlers = new LinkedList<Handler>();
+        handlers = new LinkedList<>();
         getInstance().removeServerHeader(jettyServer);
     }
 
     /**
-     * @description 删除server header
+     * @description
      * @param server
      */
     public void removeServerHeader(Server server) {
@@ -143,9 +143,9 @@ public class HttpService {
      * @param url
      * @param servlet
      */
-    public void registerServlet(String url, Servlet servlet) throws Exception {
+    public void registerServlet(String url, Servlet servlet) throws StormServerException {
         if (Objects.equal(null, url)) {
-            throw new Exception("register servlet failed, url: " + url + " is not valid");
+            throw new StormServerException("register servlet failed, url: " + url + " is not valid");
         }
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath(url);
@@ -159,10 +159,11 @@ public class HttpService {
      * @param filter
      * @param params
      */
-    public void registerFilter(String url, Class<? extends Filter> filter, Map<String, String> params) throws Exception {
+    public void registerFilter(String url, Class<? extends Filter> filter, Map<String, String> params)
+                                                                                throws StormServerException {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         if (Objects.equal(null, url)) {
-            throw new Exception("register filter failed, url: " + url + " is not valid");
+            throw new StormServerException("register filter failed, url: " + url + " is not valid");
         }
         context.setContextPath(url);
 

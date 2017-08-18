@@ -1,6 +1,7 @@
 package me.stormma.util;
 
 import me.stormma.exception.NullParamException;
+import me.stormma.exception.StormServerException;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -19,7 +20,8 @@ public class NumberUtil {
      */
     private static boolean isHexNumber(String value) {
         int index = value.startsWith("-") ? 1 : 0;
-        return value.startsWith("0x", index) || value.startsWith("0X", index) || value.startsWith("#", index);
+        return value.startsWith("0x", index) || value.startsWith("0X", index)
+                                                                                || value.startsWith("#", index);
     }
 
     /**
@@ -34,7 +36,6 @@ public class NumberUtil {
             negative = true;
             ++index;
         }
-
         if(!value.startsWith("0x", index) && !value.startsWith("0X", index)) {
             if(value.startsWith("#", index)) {
                 ++index;
@@ -59,7 +60,7 @@ public class NumberUtil {
      * @param <T>
      * @return
      */
-    public static <T extends Number> T parseNumber(String text, Class<T> targetClass) {
+    public static <T extends Number> T parseNumber(String text, Class<T> targetClass) throws StormServerException {
         String trimmed = StringUtils.trimAllWhitespace(text);
         if(Byte.class == targetClass) {
             return (T) (isHexNumber(trimmed) ? Byte.decode(trimmed) : Byte.valueOf(trimmed));
@@ -76,7 +77,7 @@ public class NumberUtil {
         } else if(Double.class == targetClass) {
             return (T) Double.valueOf(trimmed);
         } else if(BigDecimal.class != targetClass && Number.class != targetClass) {
-            throw new IllegalArgumentException("Cannot convert String [" + text + "] to target class [" + targetClass.getName() + "]");
+            throw new StormServerException("Cannot convert String [" + text + "] to target class [" + targetClass.getName() + "]");
         } else {
             return (T) new BigDecimal(trimmed);
         }
