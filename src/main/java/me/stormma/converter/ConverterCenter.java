@@ -3,7 +3,8 @@ package me.stormma.converter;
 import me.stormma.converter.impl.DefaultStringToDateConverter;
 import me.stormma.converter.impl.StringToBooleanConverter;
 import me.stormma.converter.impl.StringToNumberConverter;
-import me.stormma.exception.StormServerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -18,14 +19,17 @@ public class ConverterCenter {
 
     public static Map<Class, Class> convertMap = new HashMap<>();
 
+    private static final Logger logger = LoggerFactory.getLogger(ConverterCenter.class);
+
     /**
      * @descrption 添加转换器
      * @param clazz
      * @param converterClass
      */
-    public static void addConverter(Class clazz, Class converterClass) throws StormServerException {
+    public static void addConverter(Class clazz, Class converterClass) {
         if (Objects.equals(null, clazz) || Objects.equals(null, converterClass)) {
-            throw new StormServerException("clazz, converterClass is null, please validate param type");
+            logger.error("clazz, converterClass is null, please validate param type");
+            throw new RuntimeException("clazz, converterClass is null, please validate param type");
         }
         convertMap.put(clazz, converterClass);
     }

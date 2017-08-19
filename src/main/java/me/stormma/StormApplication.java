@@ -60,6 +60,7 @@ public class StormApplication {
         instance = new StormApplication(configFilePath);
         apiGateway = ApiGateway.getInstance();
         instance.startService(basePackageName);
+        ApplicationHelper.init(basePackageName);
         try {
             HttpService.getInstance().registerServlet("/", apiGateway);
         } catch (StormServerException e) {
@@ -109,6 +110,5 @@ public class StormApplication {
             logger.error("init http core service failed: {}", e);
             throw new RuntimeException(e);
         }
-        ApplicationHelper.initApiMap(basePackageName);
     }
 }

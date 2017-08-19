@@ -6,6 +6,12 @@ package me.stormma.constant;
  * @description storm application constant
  */
 public class StormApplicationConstant {
+
+    /**
+     * default server port
+     */
+    public static final Integer DEFAULT_SERVER_PORT = 8057;
+
     /**
      * utf-8 constant
      */
@@ -40,4 +46,9 @@ public class StormApplicationConstant {
      * ok response http status description
      */
     public static final String OH_HTTP_STATUS_DESC = "请求成功";
+
+    /**
+     * text/html type
+     */
+    public static final String TEXT_HTML_TYPE = "text/html;charset=utf-8";
 }

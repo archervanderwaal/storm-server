@@ -1,6 +1,8 @@
 package me.stormma.http.helper;
 
 import com.google.common.base.Objects;
+import me.stormma.annotation.Converter;
+import me.stormma.converter.ConverterCenter;
 import me.stormma.http.annotation.Api;
 import me.stormma.http.annotation.Controller;
 import me.stormma.http.handler.Handler;
@@ -25,10 +27,19 @@ public class ApplicationHelper {
     private static final Map<String, Handler> apiMap = new LinkedHashMap<>();
 
     /**
+     * @description 初始化apiMap, converter以及其他需要初始化的东西
+     * @param basePackageName
+     */
+    public static void init(String basePackageName) {
+        initApiMap(basePackageName);
+        initConverter(basePackageName);
+    }
+
+    /**
      * @param basePackageName
      * @description init api map
      */
-    public static void initApiMap(String basePackageName) {
+    private static void initApiMap(String basePackageName) {
         Reflections reflections = new Reflections(basePackageName);
         Set<Class<?>> apiClasses = reflections.getTypesAnnotatedWith(Controller.class);
         //遍历class
@@ -52,6 +63,20 @@ public class ApplicationHelper {
                     apiMap.put(finalUrl, handler);
                 }
             }
+        }
+    }
+
+    /**
+     * @description 初始化转换器
+     * @param basePackageName
+     */
+    private static void initConverter(String basePackageName) {
+        Reflections reflections = new Reflections(basePackageName);
+        Set<Class<?>> classes = reflections.getTypesAnnotatedWith(Converter.class);
+        for (Class<?> clazz : classes) {
+            Converter converter = clazz.getAnnotation(Converter.class);
+            Class<?> convertClass = converter.value();
+            ConverterCenter.addConverter(convertClass, clazz);
         }
     }
 

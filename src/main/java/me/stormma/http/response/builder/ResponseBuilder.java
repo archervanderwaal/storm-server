@@ -16,9 +16,9 @@ public class ResponseBuilder {
      * @return
      */
     public static <T> Response<T> success(T t) {
-        Response<T> response = new Response<T>();
+        Response<T> response = new Response<>();
         response.setCode(0);
-        response.setMsg("success");
+        response.setMsg("OK");
         response.setData(t);
         return response;
     }
@@ -38,7 +38,7 @@ public class ResponseBuilder {
      * @return
      */
     public static <T> Response<T> fail() {
-        Response<T> response = new Response<T>();
+        Response<T> response = new Response<>();
         response.setCode(1);
         response.setMsg("fail");
         response.setData(null);

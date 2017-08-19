@@ -15,6 +15,7 @@ import java.util.HashMap;
  * @description 封装req, resp
  */
 public class HttpContext {
+
     /**
      * module_name
      */
@@ -68,7 +69,7 @@ public class HttpContext {
     /**
      * request end time
      */
-    public long requestEndTime;
+    public long responseEndTime;
 
     /**
      * request id
@@ -85,12 +86,17 @@ public class HttpContext {
      */
     public byte[] requestBody;
 
+    /**
+     * handle request cost time
+     */
+    public int costTime;
+
     public HttpContext(HttpServletRequest request, HttpServletResponse response) {
         this.request = request;
         this.response = response;
         this.ip = HttpUtil.getRealIp(request);
         this.requestStartTime = System.currentTimeMillis();
-        this.params = new HashMap<String, Object>();
+        this.params = new HashMap<>();
         switch (request.getMethod().toUpperCase()) {
             case "GET":
                 this.requestMethod = RequestMethod.GET;
@@ -118,7 +124,7 @@ public class HttpContext {
         this.moduleName = moduleName;
         this.ip = HttpUtil.getRealIp(request);
         this.requestStartTime = System.currentTimeMillis();
-        this.params = new HashMap<String, Object>();
+        this.params = new HashMap<>();
         switch (request.getMethod().toUpperCase()) {
             case "GET":
                 this.requestMethod = RequestMethod.GET;

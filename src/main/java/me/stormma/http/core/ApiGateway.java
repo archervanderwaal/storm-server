@@ -1,34 +1,29 @@
 package me.stormma.http.core;
 
 import com.google.common.base.Objects;
-import me.stormma.StormApplication;
 import me.stormma.config.ConfigProperties;
+import me.stormma.config.MailConfig;
 import me.stormma.config.ServerConfig;
 import me.stormma.constant.StormApplicationConstant;
 import me.stormma.factory.InstancePool;
 import me.stormma.http.enums.RequestMethod;
-import me.stormma.http.handler.RequestHandler;
 import me.stormma.http.handler.Handler;
 import me.stormma.http.handler.invoker.HandlerInvoker;
 import me.stormma.http.handler.mapping.HandlerMapping;
-import me.stormma.http.helper.ApplicationHelper;
 import me.stormma.http.model.HttpContext;
 import me.stormma.http.request.RequestParser;
 import me.stormma.http.response.Response;
-import me.stormma.http.response.builder.ResponseBuilder;
-import me.stormma.http.util.JsonUtil;
 import me.stormma.http.util.WebUtils;
+import me.stormma.mail.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletException;
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 
 /**
  * @author stormma
@@ -87,7 +82,7 @@ public class ApiGateway extends HttpServlet {
             if (handleOptionsRequest(context)) {
                 return;
             }
-            WebUtils.send404Response(context);
+            WebUtils.send404Response(calculateHandleRequestCostTime(context));
             return;
         }
         Object result;
@@ -95,11 +90,18 @@ public class ApiGateway extends HttpServlet {
             result = handlerInvoker.invoke(context, handler);
         } catch (Exception e) {
             logger.error("invoke " + handler.getMethod() + " failed, " + e.getMessage());
-            WebUtils.send500Response(context);
+            WebUtils.send500Response(calculateHandleRequestCostTime(context));
             e.printStackTrace();
             return;
         }
-        WebUtils.sendSuccessResponse(context, (Response) result);
+        WebUtils.sendSuccessResponse(calculateHandleRequestCostTime(context), (Response) result);
+        if (MailConfig.isEnabled) {
+            try {
+                MailService.sendMessage("ssssss", "ssssss");
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -136,5 +138,15 @@ public class ApiGateway extends HttpServlet {
             return true;
         }
         return false;
+    }
+
+    /**
+     * @description 统计请求处理时长
+     * @param context
+     */
+    private HttpContext calculateHandleRequestCostTime(HttpContext context) {
+        context.responseEndTime = System.currentTimeMillis();
+        context.costTime = (int) (context.responseEndTime - context.requestStartTime);
+        return context;
     }
 }

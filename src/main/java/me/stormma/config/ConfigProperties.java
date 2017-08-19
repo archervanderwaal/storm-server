@@ -21,4 +21,9 @@ public class ConfigProperties {
      * module_name
      */
     public static String MODULE_NAME = "storm.module_name";
+
+    /**
+     * 收件人
+     */
+    public static String EMAIL_TO_ADDRESS = "storm.mail.email_to_address";
 }

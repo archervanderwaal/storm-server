@@ -1,10 +1,14 @@
 package me.stormma.config;
 
 import com.google.common.base.Objects;
+import me.stormma.constant.StormApplicationConstant;
 import me.stormma.exception.ConfigFileNotFoundException;
+import me.stormma.mail.MailService;
+import me.stormma.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.mail.MessagingException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -67,9 +71,9 @@ public class ServerConfig {
 
 
     /**
-     * @description init config
      * @param path
      * @throws ConfigFileNotFoundException
+     * @description init config
      */
     public static void init(String path) throws ConfigFileNotFoundException {
         InputStream configInputStream = ServerConfig.class.getClassLoader().getResourceAsStream(path);
@@ -83,13 +87,18 @@ public class ServerConfig {
         //init config filed
         SERVER_ID = properties.getProperty(ConfigProperties.SERVER_ID);
         PORT = Objects.equal(null, properties.getProperty(ConfigProperties.PORT)) ?
-                                                8057 : Integer.parseInt(properties.getProperty(ConfigProperties.PORT));
+                StormApplicationConstant.DEFAULT_SERVER_PORT : Integer
+                .parseInt(properties.getProperty(ConfigProperties.PORT));
         MODULE_NAME = properties.getProperty(ConfigProperties.MODULE_NAME);
+        MailConfig.EMAIL_TO_ADDRESS = properties.getProperty(ConfigProperties.EMAIL_TO_ADDRESS);
+        if (!StringUtils.isEmpty(MailConfig.EMAIL_TO_ADDRESS)) {
+            MailConfig.isEnabled = true;
+        }
     }
 
     /**
-     * @description init config
      * @throws ConfigFileNotFoundException
+     * @description init config
      */
     public static void init() throws ConfigFileNotFoundException {
         init(DEFAULT_CONFIG_FILE_NAME);

@@ -23,6 +23,7 @@
     <properties>
         <jetty.version>9.2.22.v20170606</jetty.version>
         <jackson.version>1.9.13</jackson.version>
+        <javax-mail.version>1.6.0</javax-mail.version>
     </properties>
 
 
@@ -119,6 +120,18 @@
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-jaxrs</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+
+        <!--javax-mail-->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+            <version>${javax-mail.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>${javax-mail.version}</version>
         </dependency>
     </dependencies>
 </project>
