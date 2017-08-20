@@ -45,6 +45,7 @@ public class JsonUtil {
             obj = objectMapper.readValue(json, type);
         } catch (Exception e) {
             logger.error("json string convert to java object failed: {}", e.getMessage());
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return obj;
