@@ -51,4 +51,14 @@ public class StormApplicationConstant {
      * text/html type
      */
     public static final String TEXT_HTML_TYPE = "text/html;charset=utf-8";
+
+    /**
+     * content-type
+     */
+    public static final String CONTENT_TYPE = "Content-Type";
+
+    /**
+     * json type
+     */
+    public static final String JSON_TYPE = "application/json; charset=utf-8";
 }

@@ -2,10 +2,11 @@ package me.stormma.http.util;
 
 import com.google.common.base.Objects;
 import me.stormma.exception.StormServerException;
+import me.stormma.support.helper.ApplicationHelper;
 import me.stormma.http.annotation.JsonParam;
 import me.stormma.http.annotation.RequestParam;
-import me.stormma.converter.ConverterCenter;
 import me.stormma.http.model.HttpContext;
+import me.stormma.support.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,13 @@ public class BindingParameterUtils {
             return getRequestParamValue(parameter, context);
         }
         if (!Objects.equal(null, parameter.getAnnotation(JsonParam.class))) {
-            return getJsonParamValue(parameter, context);
+            Object object = getJsonParamValue(parameter, context);
+            JsonParam jsonParam = parameter.getAnnotation(JsonParam.class);
+            boolean required = jsonParam.required();
+            if (Objects.equal(null, object) && required) {
+                logger.error("the required json param: {} not found", parameter);
+                throw new RuntimeException(String.format("the required json param: %s not found", parameter));
+            }
         }
         return null;
     }
@@ -140,7 +147,11 @@ public class BindingParameterUtils {
     private static Object getJsonParamValue(Parameter parameter, HttpContext context) {
         byte[] body = context.requestBody;
         Class<?> parameterType = parameter.getType();
-        return JsonUtil.jsonStrConvert2Obj(new String(body), parameterType);
+        String str = new String(body);
+        if (StringUtils.isEmpty(str)) {
+            return null;
+        }
+        return JsonUtil.jsonStrConvert2Obj(str, parameterType);
     }
 
     /**
@@ -161,7 +172,7 @@ public class BindingParameterUtils {
      * @return
      */
     private static Object stringConvert2OtherType(String source, Class<?> paramType) throws StormServerException {
-        Map<Class, Class> converterMap = ConverterCenter.convertMap;
+        Map<Class<?>, Class<?>> converterMap = ApplicationHelper.converterMap;
         Object result = null;
         if (paramType == String.class) {
             return source;

@@ -7,6 +7,7 @@ import me.stormma.http.handler.Handler;
 import me.stormma.http.handler.invoker.HandlerInvoker;
 import me.stormma.http.model.HttpContext;
 import me.stormma.http.util.BindingParameterUtils;
+import me.stormma.support.helper.ApplicationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +33,8 @@ public class DefaultHandleInvoker implements HandlerInvoker {
         Class<?> controllerClass = handler.getControllerClass();
         Method method = handler.getMethod();
         RequestMethod requestMethod = handler.getRequestMethod();
-        Object controllerInstance = controllerClass.newInstance();
+        //此处的controller instance 从ioc的bean map中去取
+        Object controllerInstance = ApplicationHelper.beanMap.get(controllerClass);
         List<Object> methodParams = listMethodParam(context, handler);
         return invokeMethod(method, controllerInstance, methodParams);
     }

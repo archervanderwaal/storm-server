@@ -90,6 +90,7 @@ public class ApiGateway extends HttpServlet {
             result = handlerInvoker.invoke(context, handler);
         } catch (Exception e) {
             logger.error("invoke " + handler.getMethod() + " failed, " + e.getMessage());
+            e.printStackTrace();
             WebUtils.send500Response(calculateHandleRequestCostTime(context));
             return;
         }

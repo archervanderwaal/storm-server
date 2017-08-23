@@ -5,11 +5,10 @@ import me.stormma.annotation.Application;
 import me.stormma.annotation.ComponentScan;
 import me.stormma.config.ServerConfig;
 import me.stormma.exception.ConfigFileNotFoundException;
-import me.stormma.converter.ConverterCenter;
 import me.stormma.exception.StormServerException;
+import me.stormma.support.helper.ApplicationHelper;
 import me.stormma.http.core.ApiGateway;
 import me.stormma.http.core.HttpService;
-import me.stormma.http.helper.ApplicationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,14 +59,13 @@ public class StormApplication {
         instance = new StormApplication(configFilePath);
         apiGateway = ApiGateway.getInstance();
         instance.startService(basePackageName);
+        //初始化
         ApplicationHelper.init(basePackageName);
         try {
             HttpService.getInstance().registerServlet("/", apiGateway);
         } catch (StormServerException e) {
             logger.error("register servlet failed, message: {}", e.getMessage());
         }
-        ApplicationHelper.logApiMap(instance.logger);
-        ConverterCenter.init();
         try {
             HttpService.startJettyServer();
         } catch (Exception e) {

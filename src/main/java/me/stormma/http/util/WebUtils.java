@@ -25,6 +25,7 @@ public class WebUtils {
      */
     public static void sendSuccessResponse(HttpContext context, Response response) {
         context.response.setStatus(StormApplicationConstant.OK_HTTP_STATUS);
+        context.response.setHeader(StormApplicationConstant.CONTENT_TYPE, StormApplicationConstant.JSON_TYPE);
         ServletOutputStream os = null;
         try {
             os = context.response.getOutputStream();
@@ -44,6 +45,7 @@ public class WebUtils {
      */
     public static void send404Response(HttpContext context) {
         Response<String> response = ResponseBuilder.fail(StormApplicationConstant.NOT_FOUND_HTTP_STATUS_DESC);
+        context.response.setHeader(StormApplicationConstant.CONTENT_TYPE, StormApplicationConstant.JSON_TYPE);
         context.response.setStatus(StormApplicationConstant.NOT_FOUND_HTTP_STATUS);
         ServletOutputStream os = null;
         try {
@@ -64,9 +66,11 @@ public class WebUtils {
      */
     public static void send500Response(HttpContext context) {
         Response<String> response = ResponseBuilder.fail(StormApplicationConstant.SERVER_EXCEPTION_HTTP_STATUS_DESC);
+        context.response.setHeader(StormApplicationConstant.CONTENT_TYPE, StormApplicationConstant.JSON_TYPE);
         context.response.setStatus(StormApplicationConstant.SERVER_EXCEPTION_HTTP_STATUS);
         ServletOutputStream os = null;
         try {
+            os = context.response.getOutputStream();
             os.write(JsonUtil.objConvert2JsonStr(response)
                     .getBytes(StormApplicationConstant.UTF_8));
             os.flush();

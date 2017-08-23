@@ -29,13 +29,13 @@ public class StormApplicationTest {
 
 ```java
 import me.stormma.http.annotation.Api;
-import me.stormma.http.annotation.Controller;
+import me.stormma.ioc.annotation.Controller;
 import me.stormma.http.annotation.JsonParam;
 import me.stormma.http.annotation.RequestParam;
 import me.stormma.http.enums.RequestMethod;
 import me.stormma.http.response.Response;
 import me.stormma.http.response.builder.ResponseBuilder;
-import me.stormma.model.User;
+import me.stormma.controller.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

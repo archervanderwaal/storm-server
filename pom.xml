@@ -24,6 +24,8 @@
         <jetty.version>9.2.22.v20170606</jetty.version>
         <jackson.version>1.9.13</jackson.version>
         <javax-mail.version>1.6.0</javax-mail.version>
+        <commons-collections.version>3.2.1</commons-collections.version>
+        <commons-lang.version>2.4</commons-lang.version>
     </properties>
 
 
@@ -107,7 +109,7 @@
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <version>0.9.10</version>
+            <version>0.9.11</version>
         </dependency>
 
         <!-- Jackson -->
@@ -132,6 +134,17 @@
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
             <version>${javax-mail.version}</version>
+        </dependency>
+        <!--apache-commons-->
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>${commons-collections.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${commons-lang.version}</version>
         </dependency>
     </dependencies>
 </project>

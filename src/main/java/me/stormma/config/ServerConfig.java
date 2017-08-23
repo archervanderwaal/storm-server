@@ -3,12 +3,10 @@ package me.stormma.config;
 import com.google.common.base.Objects;
 import me.stormma.constant.StormApplicationConstant;
 import me.stormma.exception.ConfigFileNotFoundException;
-import me.stormma.mail.MailService;
-import me.stormma.util.StringUtils;
+import me.stormma.support.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.mail.MessagingException;
 import java.io.InputStream;
 import java.util.Properties;
 

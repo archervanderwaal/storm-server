@@ -4,7 +4,7 @@ import com.google.common.base.Objects;
 import me.stormma.http.enums.RequestMethod;
 import me.stormma.http.handler.Handler;
 import me.stormma.http.handler.mapping.HandlerMapping;
-import me.stormma.http.helper.ApplicationHelper;
+import me.stormma.support.helper.ApplicationHelper;
 import me.stormma.http.model.HttpContext;
 
 import java.util.Map;
@@ -16,8 +16,6 @@ import java.util.Map;
  */
 public class DefaultHandlerMapping implements HandlerMapping {
 
-    private static final Map<String, Handler> apiMap = ApplicationHelper.listApiMap();
-
     /**
      * @param context
      * @return
@@ -25,7 +23,8 @@ public class DefaultHandlerMapping implements HandlerMapping {
      */
     @Override
     public Handler getHandler(HttpContext context) {
-        Handler handler = apiMap.get(context.requestPath);
+        Map<String, Handler> test = ApplicationHelper.apiMap;
+        Handler handler = ApplicationHelper.apiMap.get(context.requestPath);
         if (Objects.equal(null, handler)) {
             return null;
         }
@@ -50,6 +49,6 @@ public class DefaultHandlerMapping implements HandlerMapping {
      */
     @Override
     public boolean validateRequestPath(HttpContext context) {
-        return Objects.equal(null, apiMap.get(context.requestPath)) ? false : true;
+        return Objects.equal(null, ApplicationHelper.apiMap.get(context.requestPath)) ? false : true;
     }
 }
