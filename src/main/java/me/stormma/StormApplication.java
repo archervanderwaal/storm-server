@@ -5,7 +5,7 @@ import me.stormma.annotation.Application;
 import me.stormma.annotation.ComponentScan;
 import me.stormma.config.ServerConfig;
 import me.stormma.exception.ConfigFileNotFoundException;
-import me.stormma.exception.StormServerException;
+import me.stormma.fault.InitializationError;
 import me.stormma.support.helper.ApplicationHelper;
 import me.stormma.http.core.ApiGateway;
 import me.stormma.http.core.HttpService;
@@ -41,20 +41,21 @@ public class StormApplication {
         try {
             clazz = Class.forName(className);
         } catch (ClassNotFoundException e) {
-            logger.error("reflect {} failed, message: {}", className, e.getMessage());
-            return;
+            throw new InitializationError(String.format("reflect %s failed, message: %s", className, e.getMessage()));
         }
         ComponentScan componentScan = clazz.getAnnotation(ComponentScan.class);
         Application application = clazz.getAnnotation(Application.class);
-        if (Objects.equal(null, componentScan) && Objects.equal(null, application)) {
-            throw new RuntimeException(String.format("%s no @Application or @ComponentScan annotation", className));
+        if (Objects.equal(null, componentScan) || Objects.equal(null, application)) {
+            throw new InitializationError(String.format("%s no @Application or @ComponentScan annotation", className));
         }
         String basePackageName;
         if (!Objects.equal(null, componentScan)) {
-            basePackageName = Objects.equal(null, componentScan.value()) ?
+            basePackageName = componentScan.value().equals("") ?
                     className.substring(0, className.lastIndexOf(".")) : componentScan.value();
+        } else {
+            basePackageName = application.value().getName()
+                    .substring(0, application.value().getName().lastIndexOf("."));
         }
-        basePackageName = application.value().getName().substring(0, application.value().getName().lastIndexOf("."));
         String configFilePath = !Objects.equal(null, args) && args.length > 1 ? args[0] : null;
         instance = new StormApplication(configFilePath);
         apiGateway = ApiGateway.getInstance();
@@ -63,15 +64,9 @@ public class StormApplication {
         ApplicationHelper.init(basePackageName);
         try {
             HttpService.getInstance().registerServlet("/", apiGateway);
-        } catch (StormServerException e) {
-            logger.error("register servlet failed, message: {}", e.getMessage());
-        }
-        try {
             HttpService.startJettyServer();
         } catch (Exception e) {
-            logger.error("start jetty server failed, message: {}", e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new InitializationError("start jetty server failed", e);
         }
     }
 
@@ -87,26 +82,24 @@ public class StormApplication {
                 ServerConfig.init(configFilePath);
             }
         } catch (ConfigFileNotFoundException e) {
-            logger.error("config file not found, please check out it. message: {}", e.getMessage());
-            throw new RuntimeException(e);
+            throw new InitializationError(String
+                    .format("config file not found, please check out it. message: %s", e.getMessage()));
         }
     }
 
     /**
-     * @description 启动服务
      * @param basePackageName
+     * @description 启动服务
      */
     private void startService(String basePackageName) {
         int port = ServerConfig.PORT;
         if (!(port > 0 && port < (1 << 16) - 1)) {
-            logger.error("server port: {} is not valid!", port);
-            System.exit(-1);
+            throw new InitializationError(String.format("server port: %s is not valid!", port));
         }
         try {
             HttpService.init();
         } catch (Exception e) {
-            logger.error("init http core service failed: {}", e);
-            throw new RuntimeException(e);
+            throw new InitializationError(String.format("init http core service failed: %s", e));
         }
     }
 }

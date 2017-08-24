@@ -5,7 +5,7 @@ package me.stormma.exception;
  * @date 2017/8/12.
  * @description 找不到配置文件异常
  */
-public class ConfigFileNotFoundException extends Exception {
+public class ConfigFileNotFoundException extends StormServerException {
 
     public ConfigFileNotFoundException() {
     }

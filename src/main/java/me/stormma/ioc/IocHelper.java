@@ -121,7 +121,6 @@ public class IocHelper {
                     }
                 }
             }
-            System.out.println(beanClass);
         }
     }
 }
