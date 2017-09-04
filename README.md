@@ -71,7 +71,9 @@ storm.mail.email_to_address=1325338799@qq.com
 
 5. 运行main方法，启动storm-server
 
-
+#### 特性
+1. IOC
+2. 内置Jetty
 ##### 结束语
 > storm-server开发已有一周时间，很多核心的功能还没有实现，后期会加入ioc等功能，storm-server第一版开发完成之后，会发布到maven仓库，欢迎
 各位使用，以及参与storm-server的开发，期待你的参与与建议。
