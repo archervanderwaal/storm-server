@@ -3,7 +3,7 @@ package me.stormma.config;
 import com.google.common.base.Objects;
 import me.stormma.constant.StormApplicationConstant;
 import me.stormma.exception.ConfigFileNotFoundException;
-import me.stormma.support.util.StringUtils;
+import me.stormma.support.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +63,7 @@ public class ServerConfig {
     private static String DEFAULT_CONFIG_FILE_NAME = "storm.properties";
 
     /**
-     * log
+     * logback
      */
     private static final Logger logger = LoggerFactory.getLogger(ServerConfig.class);
 

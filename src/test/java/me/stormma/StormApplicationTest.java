@@ -1,7 +1,7 @@
 package me.stormma;
 
-import me.stormma.annotation.ComponentScan;
 import me.stormma.annotation.Application;
+import me.stormma.annotation.ComponentScan;
 
 /**
  * @author stormma

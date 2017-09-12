@@ -3,15 +3,21 @@ package me.stormma;
 import com.google.common.base.Objects;
 import me.stormma.annotation.Application;
 import me.stormma.annotation.ComponentScan;
+import me.stormma.ansi.AnsiOutput;
 import me.stormma.config.ServerConfig;
 import me.stormma.exception.ConfigFileNotFoundException;
 import me.stormma.fault.InitializationError;
+import me.stormma.support.banner.Banner;
+import me.stormma.support.banner.StormApplicationBanner;
 import me.stormma.support.helper.ApplicationHelper;
-import me.stormma.http.core.ApiGateway;
-import me.stormma.http.core.HttpService;
+import me.stormma.core.http.core.ApiGateway;
+import me.stormma.core.http.core.HttpService;
+import me.stormma.support.utils.ClassUtils;
+import me.stormma.support.utils.EnvironmentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.PrintStream;
 
 /**
  * @author stormma
@@ -26,6 +32,8 @@ public class StormApplication {
 
     private static ApiGateway apiGateway;
 
+    private static Banner banner = new StormApplicationBanner();
+
     private StormApplication() {
     }
 
@@ -34,22 +42,20 @@ public class StormApplication {
      * @description
      */
     public static void run(String[] args) {
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        StackTraceElement a = (StackTraceElement) stackTrace[2];
-        String className = a.getClassName();
-        Class<?> clazz = null;
-        try {
-            clazz = Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            throw new InitializationError(String.format("reflect %s failed, message: %s", className, e.getMessage()));
-        }
+        AnsiOutput.setEnabled(AnsiOutput.Enabled.ALWAYS);
+        Class<?> clazz = ClassUtils.getPreCallClass(3);
+        String className = clazz.getName();
+        banner.printBanner(null, new PrintStream(System.out));
+        logger.info(String.format("Starting %s on %s (%s) by %s", className.substring(className
+                .lastIndexOf(".") + 1, className.length()), EnvironmentUtils.getOsName(), EnvironmentUtils.getProjectOutputDir(),
+                EnvironmentUtils.getAuthor()));
         ComponentScan componentScan = clazz.getAnnotation(ComponentScan.class);
         Application application = clazz.getAnnotation(Application.class);
-        if (Objects.equal(null, componentScan) || Objects.equal(null, application)) {
-            throw new InitializationError(String.format("%s no @Application or @ComponentScan annotation", className));
+        if (componentScan == null && application == null) {
+            throw new InitializationError(String.format("%s no Application and ComponentScan annotation", className));
         }
         String basePackageName;
-        if (!Objects.equal(null, componentScan)) {
+        if (componentScan != null) {
             basePackageName = componentScan.value().equals("") ?
                     className.substring(0, className.lastIndexOf(".")) : componentScan.value();
         } else {
@@ -64,6 +70,7 @@ public class StormApplication {
         ApplicationHelper.init(basePackageName);
         try {
             HttpService.getInstance().registerServlet("/", apiGateway);
+            logger.info("storm-server start success. listen on " + ServerConfig.PORT);
             HttpService.startJettyServer();
         } catch (Exception e) {
             throw new InitializationError("start jetty server failed", e);

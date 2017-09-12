@@ -6,7 +6,8 @@
 
     <groupId>me.stormma</groupId>
     <artifactId>smart-server</artifactId>
-    <version>1.0</version>
+    <packaging>pom</packaging>
+    <version>V1.0.0</version>
     <build>
         <plugins>
             <plugin>
@@ -19,6 +20,9 @@
             </plugin>
         </plugins>
     </build>
+    <modules>
+        <module>storm-server-test</module>
+    </modules>
 
     <properties>
         <jetty.version>9.2.22.v20170606</jetty.version>
@@ -51,7 +55,6 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>${servlet.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!--junit-->
@@ -152,5 +155,13 @@
             <artifactId>commons-lang</artifactId>
             <version>${commons-lang.version}</version>
         </dependency>
+
+        <!--commons-io-->
+        <dependency>
+            <groupId>org.apache.directory.studio</groupId>
+            <artifactId>org.apache.commons.io</artifactId>
+            <version>${commons-lang.version}</version>
+        </dependency>
+
     </dependencies>
 </project>

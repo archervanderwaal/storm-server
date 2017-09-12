@@ -2,7 +2,7 @@ package me.stormma.support.converter.impl;
 
 import me.stormma.support.converter.Converter;
 import me.stormma.exception.StormServerException;
-import me.stormma.support.util.NumberUtil;
+import me.stormma.support.utils.NumberUtils;
 
 import java.util.Objects;
 
@@ -21,7 +21,7 @@ public class StringToNumberConverter<T extends Number> implements Converter<Stri
      */
     @Override
     public T convert(String source) throws StormServerException {
-        return Objects.equals(null, source.length()) ? null : NumberUtil.parseNumber(source, this.targetType);
+        return Objects.equals(null, source.length()) ? null : NumberUtils.parseNumber(source, this.targetType);
     }
 
     public StringToNumberConverter (Class<T> targetType) {

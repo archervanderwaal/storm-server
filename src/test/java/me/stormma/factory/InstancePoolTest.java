@@ -1,7 +1,7 @@
 package me.stormma.factory;
 
-import me.stormma.http.handler.invoker.HandlerInvoker;
-import me.stormma.http.handler.mapping.HandlerMapping;
+import me.stormma.core.http.handler.invoker.HandlerInvoker;
+import me.stormma.core.http.handler.mapping.HandlerMapping;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

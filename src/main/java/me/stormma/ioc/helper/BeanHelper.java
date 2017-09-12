@@ -7,7 +7,7 @@ import me.stormma.ioc.annotation.Component;
 import me.stormma.ioc.annotation.Controller;
 import me.stormma.ioc.annotation.Service;
 import me.stormma.support.scanner.IClassScanner;
-import me.stormma.support.util.CollectionUtils;
+import me.stormma.support.utils.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +20,7 @@ import java.util.*;
  */
 public class BeanHelper {
     /**
-     * log
+     * logback
      */
     private static Logger logger = LoggerFactory.getLogger(BeanHelper.class);
 
@@ -59,7 +59,7 @@ public class BeanHelper {
             }
             beanMap.put(clazz, instance);
         }
-        //log beans
+        //logback beans
         logAllBeans(beanClasses);
         return beanMap;
     }

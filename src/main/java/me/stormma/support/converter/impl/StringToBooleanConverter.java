@@ -2,7 +2,7 @@ package me.stormma.support.converter.impl;
 
 import me.stormma.support.converter.Converter;
 import me.stormma.exception.StormServerException;
-import me.stormma.support.util.StringUtils;
+import me.stormma.support.utils.StringUtils;
 
 import java.util.HashSet;
 import java.util.Set;

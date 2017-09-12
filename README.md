@@ -28,13 +28,13 @@ public class StormApplicationTest {
 3. 创建一个controller处理请求
 
 ```java
-import me.stormma.http.annotation.Api;
+import me.stormma.core.http.annotation.Api;
 import me.stormma.ioc.annotation.Controller;
-import me.stormma.http.annotation.JsonParam;
-import me.stormma.http.annotation.RequestParam;
-import me.stormma.http.enums.RequestMethod;
-import me.stormma.http.response.Response;
-import me.stormma.http.response.builder.ResponseBuilder;
+import me.stormma.core.http.annotation.JsonParam;
+import me.stormma.core.http.annotation.RequestParam;
+import me.stormma.core.http.enums.RequestMethod;
+import me.stormma.core.http.response.Response;
+import me.stormma.core.http.response.builder.ResponseBuilder;
 import me.stormma.controller.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

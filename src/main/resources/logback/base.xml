@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <include resource="logback/defaults.xml" />
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+    <include resource="logback/console-appender.xml" />
+    <include resource="logback/file-appender.xml" />
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </root>
+</included>

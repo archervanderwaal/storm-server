@@ -61,4 +61,9 @@ public class StormApplicationConstant {
      * json type
      */
     public static final String JSON_TYPE = "application/json; charset=utf-8";
+
+    /**
+     * logback
+     */
+    public static final String LOGBACK_FILE_PATH = "logback.xml";
 }
