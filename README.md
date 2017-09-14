@@ -1,7 +1,7 @@
 #### storm-server
 
 ##### 什么是storm-server?为什么有storm-server
-> storm-server是一个以jetty为内置servlet容器的一个java web框架，主要用于java提供api服务来使用，参数传递和请求的响应的数据类型都是JSON，
+> storm-server,以jetty为内置servlet容器的一个java web框架，主要用于java提供api服务来使用，参数传递和请求的响应的数据类型都是JSON，
 storm-server设计的初衷就是练习自己实现一个轻量级的框架(或许这压根算不上是一个框架)，或许后面可以用于自己项目中，快速开发出适用于自己系统的
 后端服务。storm-server后期会继续维护，增加其他的功能，当然如果有人感兴趣，也可以加入项目中，贡献自己的一份力。
 
@@ -63,7 +63,6 @@ storm.server.module=storm_server_test
 storm.mail.email_to_address=1325338799@qq.com
 storm.ansi.output.enabled=true
 ```
-
 5. 运行main方法，启动storm-server
 
 #### 特性

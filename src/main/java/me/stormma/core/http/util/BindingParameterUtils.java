@@ -1,6 +1,7 @@
 package me.stormma.core.http.util;
 
 import com.google.common.base.Objects;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import me.stormma.exception.StormServerException;
 import me.stormma.support.helper.ApplicationHelper;
 import me.stormma.core.http.annotation.JsonParam;
@@ -32,6 +33,10 @@ public class BindingParameterUtils {
      * @description 给parameter绑定数据
      */
     public static Object bindParam(Parameter parameter, HttpContext context) throws StormServerException {
+        //判断是不是HttpContext
+        if (parameter.getType() == HttpContext.class) {
+            return context;
+        }
         if (!Objects.equal(null, parameter.getAnnotation(RequestParam.class))) {
             return getRequestParamValue(parameter, context);
         }
@@ -96,43 +101,76 @@ public class BindingParameterUtils {
 
         //如果接收参数的类型是String[]
         if (parameterType == String[].class) {
-             return (String[]) paramList.toArray();
+            String[] param = new String[paramList.size()];
+            for (int i = 0; i < paramList.size(); i++) {
+                param[i] = paramList.get(i);
+            }
+            return param;
         }
 
-        //如果接收参数的类型是int[]
+        //如果接收参数的类型是int[] // Integer[]
         if (parameterType == int[].class || parameterType == Integer[].class) {
-            List<Integer> result = new ArrayList<>();
-            for (String param : paramList) {
-                result.add((Integer) stringConvert2OtherType(param, Integer.class));
+            Integer[] param = new Integer[paramList.size()];
+            for (int i = 0; i < paramList.size(); i++) {
+                param[i] = (Integer) stringConvert2OtherType(paramList.get(i), Integer.class);
             }
-            return (Integer[])result.toArray();
+            if (parameterType == Integer[].class) {
+                return param;
+            }
+            //Integer[] 转 int[]
+            int[] result = new int[param.length];
+            for (int i = 0; i < param.length; i++) {
+                result[i] = param[i];
+            }
+            return result;
         }
 
-        //如果接收参数的类型是float[]
+        //如果接收参数的类型是float // Float[]
         if (parameterType == float[].class || parameterType == Float[].class)  {
-            List<Float> result = new ArrayList<>();
-            for (String param : paramList) {
-                result.add((Float) stringConvert2OtherType(param, Float.class));
+            Float[] param = new Float[paramList.size()];
+            for (int i = 0; i < paramList.size(); i++) {
+                param[i] = (Float) stringConvert2OtherType(paramList.get(i), Float.class);
             }
-            return (Float[])result.toArray();
+            if (parameterType == Float[].class) {
+                return param;
+            }
+            float[] result = new float[param.length];
+            for (int i = 0; i < param.length; i++) {
+                result[i] = param[i];
+            }
+            return result;
         }
 
-        //如果接收参数的类型是double[]
+        //如果接收参数的类型是double[] // Double[]
         if (parameterType == double[].class || parameterType == Double[].class) {
-            List<Double> result = new ArrayList<>();
-            for (String param : paramList) {
-                result.add((Double) stringConvert2OtherType(param, Double.class));
+            Double[] param = new Double[paramList.size()];
+            for (int i = 0; i < paramList.size(); i++) {
+                param[i] = (Double) stringConvert2OtherType(paramList.get(i), Double.class);
             }
-            return (Double[])result.toArray();
+            if (parameterType == Double[].class) {
+                return param;
+            }
+            double[] result = new double[param.length];
+            for (int i = 0; i < param.length; i++) {
+                result[i] = param[i];
+            }
+            return result;
         }
 
-        //如果接收参数的类型是boolean[]
+        //如果接收参数的类型是boolean[] // Boolean[]
         if (parameterType == boolean[].class || parameterType == Boolean[].class) {
-            List<Boolean> result = new ArrayList<>();
-            for (String param : paramList) {
-                result.add((Boolean) stringConvert2OtherType(param, Boolean.class));
+            Boolean[] param = new Boolean[paramList.size()];
+            for (int i = 0; i < paramList.size(); i++) {
+                param[i] = (Boolean) stringConvert2OtherType(paramList.get(i), Boolean.class);
             }
-            return (Boolean[])result.toArray();
+            if (parameterType == Boolean.class) {
+                return param;
+            }
+            boolean[] result = new boolean[param.length];
+            for (int i = 0; i < param.length; i++) {
+                result[i] = param[i];
+            }
+            return result;
         }
         //其余情况按照转换器支持的类型进行转换，如果转换失败抛出异常.
         return stringConvert2OtherType((String)value, parameterType);

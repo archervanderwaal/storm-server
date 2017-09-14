@@ -34,7 +34,7 @@ public class RequestParser {
      */
     private void parseQueryString(HttpContext context) {
         Map<String, Object> param = HttpUtil.parseQueryString(context.request.getQueryString());
-        if (!Objects.equal(null, param)) {
+        if (param != null) {
             context.params.putAll(param);
         }
     }
