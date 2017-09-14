@@ -58,15 +58,10 @@ public class TestController {
 4. 添加storm.properties配置文件
 
 ```properties
-#作用通模块名
-storm.server_id=520757
-#端口，默认8057
-storm.port=8080
-#模块名，主要是为了区分多模块下错误定位
-storm.module_name=storm
-#异常接收邮件地址,如果没有就证明没有启用邮件通知异常服务
+storm.server.port=9090
+storm.server.module=storm_server_test
 storm.mail.email_to_address=1325338799@qq.com
-....
+storm.ansi.output.enabled=true
 ```
 
 5. 运行main方法，启动storm-server
