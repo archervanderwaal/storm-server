@@ -1,8 +1,16 @@
 package me.stormma.support.scanner;
 
+import me.stormma.StormApplication;
+import me.stormma.config.MailConfig;
+import me.stormma.factory.InstancePool;
+import me.stormma.support.listener.AbstractStormApplicationRunListener;
+import me.stormma.support.listener.StormApplicationRunListener;
+import me.stormma.support.scanner.impl.ClassScanner;
 import org.junit.Test;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Set;
@@ -13,6 +21,8 @@ import java.util.Set;
  * @description test
  */
 public class ClassScannerTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(ClassScannerTest.class);
 
     @Test
     public void test() {
@@ -25,5 +35,12 @@ public class ClassScannerTest {
             } catch (ClassNotFoundException e) {
             }
         }
+    }
+
+    @Test
+    public void testGetSubType() {
+        IClassScanner classScanner = InstancePool.getClassScanner();
+        Set<Class<? extends StormApplicationRunListener>> listeners = classScanner.getSubClassesOf("", StormApplicationRunListener.class);
+        logger.info("{}", listeners.size());
     }
 }

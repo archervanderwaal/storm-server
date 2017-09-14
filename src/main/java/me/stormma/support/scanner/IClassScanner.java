@@ -31,5 +31,12 @@ public interface IClassScanner {
      * @param type
      * @return 
      */
-    Set<Class<?>> getSubClassesOf(String packageName, Class<?> type);
+    <T> Set<Class<? extends T>> getSubClassesOf(String packageName, Class<T> type);
+
+    /**
+     * @description classpath
+     * @param type
+     * @return
+     */
+    <T> Set<Class<? extends T>> getSubClassesOfClassPath(Class<T> type);
 }

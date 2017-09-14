@@ -13,12 +13,12 @@ public class ServerConfigTest {
     @Before
     public void initConfig() throws ConfigFileNotFoundException {
         //init config
-        ServerConfig.init("/conf/storm.properties");
+//        StormApplicationConfig.init("/conf/storm.properties");
     }
 
     @Test
     public void testGetConfigField() {
-        System.out.println(ServerConfig.PORT);
-        System.out.println(ServerConfig.SERVER_ID);
+//        System.out.println(StormApplicationConfig.PORT);
+//        System.out.println(StormApplicationConfig.SERVER_ID);
     }
 }

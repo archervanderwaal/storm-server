@@ -41,8 +41,8 @@ public class IocHelper {
                 for (Field field : fields) {
                     boolean isInjectSuccess = false;
                     if (field.isAnnotationPresent(AutoWired.class)) {
-                        Class<?> fieldClass = field.getType();
-                        Set<Class<?>> implementClasses = classScanner.getSubClassesOf(packageName, fieldClass);
+                        Class fieldClass = field.getType();
+                        Set<Class> implementClasses = classScanner.getSubClassesOf(packageName, fieldClass);
                         if (CollectionUtils.isNotEmpty(implementClasses)) {
                             if (Objects.equals(1, implementClasses.size())) {
                                 //如果要注入的类型只有子类只有一个，那么取出这个类型的instance

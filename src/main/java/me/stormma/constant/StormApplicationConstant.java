@@ -66,4 +66,9 @@ public class StormApplicationConstant {
      * logback
      */
     public static final String LOGBACK_FILE_PATH = "logback.xml";
+
+    /**
+     * default config name path
+     */
+    public static final String DEFAULT_CONFIG_PATH = "storm.properties";
 }

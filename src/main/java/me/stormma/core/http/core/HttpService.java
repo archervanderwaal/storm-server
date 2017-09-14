@@ -1,7 +1,7 @@
 package me.stormma.core.http.core;
 
 import com.google.common.base.Objects;
-import me.stormma.config.ServerConfig;
+import me.stormma.core.config.StormApplicationConfig;
 import me.stormma.exception.StormServerException;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.ContextHandler;
@@ -73,7 +73,7 @@ public class HttpService {
             throw new StormServerException("register static file core filed, the url: " + url + " is not valid");
         }
         ResourceHandler handler = new ResourceHandler();
-        String resPath = String.format("%s/%s", ServerConfig.MODULE_NAME, subDir);
+        String resPath = String.format("%s/%s", StormApplicationConfig.MODULE, subDir);
         handler.setResourceBase(resPath);
         ContextHandler context = new ContextHandler(url);
         context.setHandler(handler);
@@ -108,18 +108,18 @@ public class HttpService {
 
         //config thread poll，其中线程池的线程从队列中拿到任务执行，任务队列类型==>ConcurrentLinkedQueue.
         QueuedThreadPool pool = new QueuedThreadPool();
-        if (ServerConfig.CUSTOMIZE_THREAD_POOL) {
-            pool.setMaxThreads(ServerConfig.MAX_THREAD_COUNT);
-            pool.setMinThreads(ServerConfig.MIN_THREAD_COUNT);
-            pool.setIdleTimeout(ServerConfig.THREAD_TIMEOUT);
+        if (StormApplicationConfig.CUSTOMIZE_THREAD_POOL) {
+            pool.setMaxThreads(StormApplicationConfig.MAX_THREAD_COUNT);
+            pool.setMinThreads(StormApplicationConfig.MIN_THREAD_COUNT);
+            pool.setIdleTimeout(StormApplicationConfig.THREAD_TIMEOUT);
         }
         jettyServer = new Server(pool);
         HttpConfiguration httpConfig = new HttpConfiguration();
         httpConfig.addCustomizer(new ForwardedRequestCustomizer());
         ServerConnector http = new ServerConnector(jettyServer, new HttpConnectionFactory(httpConfig));
         http.setHost(DEFAULT_HOST);
-        http.setPort(ServerConfig.PORT);
-        http.setIdleTimeout(ServerConfig.IO_TIMEOUT);
+        http.setPort(StormApplicationConfig.PORT);
+        http.setIdleTimeout(StormApplicationConfig.IO_TIMEOUT);
         jettyServer.addConnector(http);
         handlers = new LinkedList<>();
         getInstance().removeServerHeader(jettyServer);

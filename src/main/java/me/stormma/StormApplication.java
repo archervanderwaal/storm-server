@@ -1,23 +1,22 @@
 package me.stormma;
 
-import com.google.common.base.Objects;
 import me.stormma.annotation.Application;
 import me.stormma.annotation.ComponentScan;
-import me.stormma.ansi.AnsiOutput;
-import me.stormma.config.ServerConfig;
-import me.stormma.exception.ConfigFileNotFoundException;
+import me.stormma.constant.StormApplicationConstant;
+import me.stormma.core.config.Environment;
+import me.stormma.core.config.StormApplicationConfig;
+import me.stormma.factory.InstancePool;
 import me.stormma.fault.InitializationError;
-import me.stormma.support.banner.Banner;
-import me.stormma.support.banner.StormApplicationBanner;
-import me.stormma.support.helper.ApplicationHelper;
 import me.stormma.core.http.core.ApiGateway;
 import me.stormma.core.http.core.HttpService;
+import me.stormma.support.listener.*;
+import me.stormma.support.scanner.IClassScanner;
 import me.stormma.support.utils.ClassUtils;
 import me.stormma.support.utils.EnvironmentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.PrintStream;
+import java.util.*;
 
 /**
  * @author stormma
@@ -28,29 +27,53 @@ public class StormApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(StormApplication.class);
 
-    private static StormApplication instance;
-
     private static ApiGateway apiGateway;
 
-    private static Banner banner = new StormApplicationBanner();
-
-    private StormApplication() {
-    }
+    private static IClassScanner classScanner = InstancePool.getClassScanner();
 
     /**
      * @param args
      * @description
      */
     public static void run(String[] args) {
-        AnsiOutput.setEnabled(AnsiOutput.Enabled.ALWAYS);
         Class<?> clazz = ClassUtils.getPreCallClass(3);
-        String className = clazz.getName();
-        banner.printBanner(null, new PrintStream(System.out));
-        logger.info(String.format("Starting %s on %s (%s) by %s", className.substring(className
-                .lastIndexOf(".") + 1, className.length()), EnvironmentUtils.getOsName(), EnvironmentUtils.getProjectOutputDir(),
+        Environment environment = createStormApplicationEnvironment(args != null && args.length > 1 ? args[0] : null, clazz);
+        StormApplicationRunListeners listeners = getListeners(environment);
+        listeners.environmentPrepared();
+        listeners.starting();
+        logger.info(String.format("Starting %s on %s (%s) by %s", clazz.getName().substring(clazz.getName()
+                        .lastIndexOf(".") + 1, clazz.getName().length()), EnvironmentUtils.getOsName(), EnvironmentUtils.getProjectOutputDir(),
                 EnvironmentUtils.getAuthor()));
-        ComponentScan componentScan = clazz.getAnnotation(ComponentScan.class);
-        Application application = clazz.getAnnotation(Application.class);
+        try {
+            startService(environment.getStormApplicationComponentScanPackage());
+        } catch (Exception e) {
+            logger.error("start storm-server core service failed, {}", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param basePackageName
+     * @description 启动服务
+     */
+    private static void startService(String basePackageName) throws Exception {
+        apiGateway = ApiGateway.getInstance();
+        HttpService.init();
+        HttpService.getInstance().registerServlet("/", apiGateway);
+        logger.info("storm-server start success. listen on " + StormApplicationConfig.PORT);
+        HttpService.startJettyServer();
+    }
+
+    /**
+     * 创建Environment
+     *
+     * @param args
+     * @return
+     */
+    private static Environment createStormApplicationEnvironment(String args, Class<?> sourceClass) {
+        ComponentScan componentScan = sourceClass.getAnnotation(ComponentScan.class);
+        Application application = sourceClass.getAnnotation(Application.class);
+        String className = sourceClass.getName();
         if (componentScan == null && application == null) {
             throw new InitializationError(String.format("%s no Application and ComponentScan annotation", className));
         }
@@ -62,51 +85,52 @@ public class StormApplication {
             basePackageName = application.value().getName()
                     .substring(0, application.value().getName().lastIndexOf("."));
         }
-        String configFilePath = !Objects.equal(null, args) && args.length > 1 ? args[0] : null;
-        instance = new StormApplication(configFilePath);
-        apiGateway = ApiGateway.getInstance();
-        instance.startService(basePackageName);
-        //初始化
-        ApplicationHelper.init(basePackageName);
-        try {
-            HttpService.getInstance().registerServlet("/", apiGateway);
-            logger.info("storm-server start success. listen on " + ServerConfig.PORT);
-            HttpService.startJettyServer();
-        } catch (Exception e) {
-            throw new InitializationError("start jetty server failed", e);
-        }
+        args = args == null ? StormApplicationConstant.DEFAULT_CONFIG_PATH : args;
+        Environment environment = new Environment(args, basePackageName, sourceClass);
+        environment.setLogger(logger);
+        return environment;
     }
 
     /**
-     * @param configFilePath
-     * @throws Exception
+     * 创建StormApplicationRunListener实例
+     *
+     * @param environment
+     * @return
+     * @throws IllegalAccessException
+     * @throws InstantiationException
      */
-    private StormApplication(String configFilePath) {
-        try {
-            if (Objects.equal(null, configFilePath) || Objects.equal("", configFilePath)) {
-                ServerConfig.init();
-            } else {
-                ServerConfig.init(configFilePath);
+    private static StormApplicationRunListeners getListeners(Environment environment) {
+        Set<Class<? extends StormApplicationRunListener>> listenerClasses = classScanner.getSubClassesOfClassPath(StormApplicationRunListener.class);
+        Set<Class<? extends StormApplicationRunListener>> removeListeners = new HashSet<>();
+        for (Class<? extends StormApplicationRunListener> clazz : listenerClasses) {
+            if (AbstractStormApplicationRunListener.class == clazz || StormApplicationEnvironmentRunListener.class == clazz
+                    || StormApplicationBannerRunListener.class == clazz || StormApplicationContextRunListener.class == clazz) {
+                removeListeners.add(clazz);
             }
-        } catch (ConfigFileNotFoundException e) {
-            throw new InitializationError(String
-                    .format("config file not found, please check out it. message: %s", e.getMessage()));
         }
-    }
-
-    /**
-     * @param basePackageName
-     * @description 启动服务
-     */
-    private void startService(String basePackageName) {
-        int port = ServerConfig.PORT;
-        if (!(port > 0 && port < (1 << 16) - 1)) {
-            throw new InitializationError(String.format("server port: %s is not valid!", port));
+        listenerClasses.removeAll(removeListeners);
+        LinkedList<StormApplicationRunListener> listeners = new LinkedList<>();
+        for (Class<? extends StormApplicationRunListener> clazz : listenerClasses) {
+            Object obj = null;
+            try {
+                obj = clazz.newInstance();
+            } catch (Exception e) {
+                logger.error("reflect {} new instance failed. {}", clazz.getName(), e.getMessage());
+            }
+            listeners.add(StormApplicationRunListener.class.cast(obj));
         }
-        try {
-            HttpService.init();
-        } catch (Exception e) {
-            throw new InitializationError(String.format("init http core service failed: %s", e));
-        }
+        listeners.sort(new Comparator<StormApplicationRunListener>() {
+            @Override
+            public int compare(StormApplicationRunListener o1, StormApplicationRunListener o2) {
+                return o1.getStormApplicationRunListenerStartOrder() - o2.getStormApplicationRunListenerStartOrder();
+            }
+        });
+        //StormApplicationEnvironmentRunListener first
+        //StormApplicationBannerRunListener second
+        //StormApplicationContextRunListener third
+        listeners.addFirst(new StormApplicationContextRunListener());
+        listeners.addFirst(new StormApplicationBannerRunListener());
+        listeners.addFirst(new StormApplicationEnvironmentRunListener());
+        return new StormApplicationRunListeners(listeners, environment);
     }
 }

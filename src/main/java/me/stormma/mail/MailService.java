@@ -1,6 +1,5 @@
 package me.stormma.mail;
 
-import me.stormma.config.MailConfig;
 import me.stormma.constant.StormApplicationConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,7 @@ public class MailService {
      * @description send message
      */
     public static void sendMessage(String subject, String content) throws MessagingException {
-        Session session = MailUtils.createSession();
+        /*Session session = MailUtils.createSession();
         MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress(MailConfig.EMAIL_FROM_ADDRESS));
         message.addRecipients(Message.RecipientType.TO, MailConfig.EMAIL_TO_ADDRESS);
@@ -40,6 +39,6 @@ public class MailService {
         message.setContent(parts);
         logger.info("======>{}", MailConfig.EMAIL_TO_ADDRESS);
         logger.info("======>{}", MailConfig.EMAIL_FROM_ADDRESS);
-        Transport.send(message);
+        Transport.send(message);*/
     }
 }

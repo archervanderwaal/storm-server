@@ -1,7 +1,5 @@
 package me.stormma.mail;
 
-import me.stormma.config.MailConfig;
-
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -19,7 +17,7 @@ public class MailUtils {
      * @return
      */
     public static Session createSession() {
-        Properties properties = new Properties();
+        /*Properties properties = new Properties();
         properties.setProperty("mail.transport.protocol", "smtp");
         properties.setProperty("mail.smtp.port", "25");
         properties.setProperty("mail.host", MailConfig.EMAIL_HOST);
@@ -30,6 +28,7 @@ public class MailUtils {
                 return new PasswordAuthentication(MailConfig.EMAIL_FROM_ADDRESS, MailConfig.EMAIL_PASSWORD);
             }
         };
-        return Session.getInstance(properties, authenticator);
+        return Session.getInstance(properties, authenticator);*/
+        return null;
     }
 }

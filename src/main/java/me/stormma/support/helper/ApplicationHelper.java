@@ -39,21 +39,22 @@ public class ApplicationHelper {
      */
     private static final Logger logger = LoggerFactory.getLogger(ApplicationHelper.class);
 
-    /**
-     * @description 初始化apiMap, converter以及其他需要初始化的东西
-     * @param basePackageName
-     */
-    public static void init(String basePackageName) {
+    public static void initStormApplicationIoc(String basePackageName) {
         //初始化bean
         try {
             beanMap = BeanHelper.initBeanMap(basePackageName);
-            IocHelper.initBean(basePackageName);
         } catch (StormServerException e) {
-            throw new RuntimeException(e);
+            logger.error("init bean failed, message {}", e.getMessage());
+            e.printStackTrace();
         }
-        //初始化api
+        IocHelper.initBean(basePackageName);
+    }
+
+    public static void initStormApplicationApiMap(String basePackageName) {
         apiMap = ApiHelper.initApiMap(basePackageName);
-        //初始化转换器
+    }
+
+    public static void initStormApplicationConverterMap(String basePackageName) {
         converterMap = ConverterHelper.initConverter(basePackageName);
     }
 }

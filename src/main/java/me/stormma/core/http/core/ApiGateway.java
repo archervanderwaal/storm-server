@@ -1,10 +1,9 @@
 package me.stormma.core.http.core;
 
 import com.google.common.base.Objects;
-import me.stormma.config.ConfigProperties;
-import me.stormma.config.MailConfig;
-import me.stormma.config.ServerConfig;
 import me.stormma.constant.StormApplicationConstant;
+import me.stormma.core.config.StormApplicationConfig;
+import me.stormma.core.config.StormApplicationConfigProperties;
 import me.stormma.factory.InstancePool;
 import me.stormma.core.http.enums.RequestMethod;
 import me.stormma.core.http.handler.Handler;
@@ -95,13 +94,13 @@ public class ApiGateway extends HttpServlet {
             return;
         }
         WebUtils.sendSuccessResponse(calculateHandleRequestCostTime(context), (Response) result);
-        if (MailConfig.isEnabled) {
+        /*if (MailConfig.isEnabled) {
             try {
                 MailService.sendMessage("ssssss", "ssssss");
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     /**
@@ -118,8 +117,7 @@ public class ApiGateway extends HttpServlet {
         RequestParser.parseRequest(context);
         context.request.setCharacterEncoding(StormApplicationConstant.UTF_8);
         context.response.setCharacterEncoding(StormApplicationConstant.UTF_8);
-        context.response.setHeader(ConfigProperties.SERVER_ID, ServerConfig.SERVER_ID);
-        context.response.setHeader(ConfigProperties.MODULE_NAME, ServerConfig.MODULE_NAME);
+        context.response.setHeader(StormApplicationConfigProperties.MODULE, StormApplicationConfig.MODULE);
         return context;
     }
 

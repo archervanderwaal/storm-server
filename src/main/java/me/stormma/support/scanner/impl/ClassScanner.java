@@ -58,8 +58,19 @@ public class ClassScanner implements IClassScanner {
      * @description
      */
     @Override
-    public Set<Class<?>> getSubClassesOf(String packageName, Class<?> type) {
+    public <T> Set<Class<? extends T>> getSubClassesOf(String packageName, Class<T> type) {
         Reflections reflections = new Reflections(packageName);
-        return (Set<Class<?>>) reflections.getSubTypesOf(type);
+        Set<Class<? extends T>> classes = reflections.getSubTypesOf(type);
+        return classes;
+    }
+
+    /**
+     * @param type
+     * @return
+     * @description classpath
+     */
+    @Override
+    public <T> Set<Class<? extends T>> getSubClassesOfClassPath(Class<T> type) {
+        return getSubClassesOf("", type);
     }
 }
