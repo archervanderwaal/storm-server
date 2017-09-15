@@ -1,11 +1,16 @@
-#### storm-server
 
-```java
-/**
- * @author stormma
- * @date 2017/09/14
- */
-```
+> @author stormma
+> @date 2017/09/15
+
+----
+> 生命不息，奋斗不止
+
+----
+
+> storm-server使用指南
+
+
+#### storm-server
 
 ##### storm-server介绍
 > storm-server, 以jetty为servlet容器的一个java web框架, 主要用于为前端提供api服务, 具有快速开发的优势。storm-server之后会提供一些操作mysql, redis的工具, storm-server旨在快速开发一些小型的web应用, 以及用于日常学习。storm-server github地址: https://github.com/stormmaybin/storm-server.git, 欢迎各位star和参与开发，storm-server期待你的参与与建议。
@@ -46,6 +51,16 @@ storm.server.module=storm_server_test #模块名
 storm.ansi.output.enabled=true # 不同级别日志显示颜色不同
 ```
 > storm-server默认去classpath下读取storm.properties配置文件, 当然, 你也可以指定配置文件的路径和名字, 如果你选择这么做了，那么你要在运行启动类时候传入配置文件的完整路径, 例如: 假如我的配置文件名字叫application.properties, 放在resources/config/,那么你需要在运行启动类(下面会说到)的时候传入参数'resources/config/application.properties'。 
+
+###### 添加logback.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="logback/base.xml" />
+</configuration>
+```
+> storm-server使用logback日志系统，storm-server已经提供了base.xml, 你只需要新建logback.xml，添加base.xml即可，当然你也可以加入自己的配置。
 
 ###### 启动storm-server
 ``` java
@@ -274,6 +289,55 @@ public class DefaultStringToDateConverter implements Converter<String, Date> {
 > 同样，storm-server提供了json参数自动绑定到对象上，@JsonParam注解可以帮你完成这个冗余的操作。
 
 ###### 启动storm-server
-```java
+![](http://blog.stormma.me/2017/09/15/storm-server%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/storm-server.jpeg)
 
+###### 使用maven打成可执行jar
+
+- 添加打包插件
+
+```xml
+<!--打包可执行jar-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.github.stormmaybin.controller.StormServerTestApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <!--引用第三方jar-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 ```
+> 你要做的就是修改```MainClass```为你的启动类, 也就是调用```StormApplication.run(args)```的那个类。
+
+```java
+mvn clean package
+```
+
+> 打包结束之后会出现一个xxx.jar，然后执行java -jar xxx.jar即可运行。
+
+![](http://blog.stormma.me/2017/09/15/storm-server%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/storm-server-jar-run.jpeg)
+
+##### 结束语
+> storm-server从开始开发到1.0版本的发布历经了1个月，这一个月其中的两周因为一些事情一行代码都没写，所以今天匆匆茫茫发布了1.0版本之后，甚是心虚，我深知storm-server现在还远远不够完善，但是作为学习资料足够了。我相信，storm-server后期的升级与维护，离不开你的支持、参与和建议，如果你对storm-server感兴趣，欢迎参与讨论，本人企鹅号: 1325338799, email: stormmaybin@gmail.com。
