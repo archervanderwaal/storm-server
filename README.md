@@ -340,6 +340,5 @@ mvn clean package
 > storm-server从开始开发到1.0版本的发布历经了1个月，这一个月其中的两周因为一些事情一行代码都没写，所以今天匆匆茫茫发布了1.0版本之后，甚是心虚，我深知storm-server现在还远远不够完善，但是作为学习资料足够了。我相信，storm-server后期的升级与维护，离不开你的支持、参与和建议，如果你对storm-server感兴趣，欢迎参与讨论，本人企鹅号: 1325338799, email: stormmaybin@gmail.com。
 
 
-![](http://storm-ma.oss-cn-shanghai.aliyuncs.com/WechatIMG4.jpeg)
-
 **storm-server对您有帮助? 求赞赏鼓励支持。**
+支付宝: 18292817803
