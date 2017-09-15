@@ -50,7 +50,7 @@ public class ApplicationHelper {
         IocHelper.initBean(basePackageName);
     }
 
-    public static void initStormApplicationApiMap(String basePackageName) {
+    public static void initStormApplicationApiMap(String basePackageName) throws StormServerException {
         apiMap = ApiHelper.initApiMap(basePackageName);
     }
 

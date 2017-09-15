@@ -11,6 +11,11 @@ public class Response<T> {
     private Integer code;
 
     /**
+     * 本次请求的status
+     */
+    private Integer status;
+
+    /**
      * 要返回的数据
      */
     private T data;
@@ -26,6 +31,14 @@ public class Response<T> {
 
     public void setCode(Integer code) {
         this.code = code;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public T getData() {

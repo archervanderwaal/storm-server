@@ -20,6 +20,20 @@ public class ResponseBuilder {
         response.setCode(0);
         response.setMsg("OK");
         response.setData(t);
+        response.setStatus(0);
+        return response;
+    }
+
+    /**
+     * 请求理论上成功，数据返回与预期不一样，设置一个status
+     * @param t
+     * @param status
+     * @param <T>
+     * @return
+     */
+    public static <T> Response<T> success(T t, int status) {
+        Response<T> response = success();
+        response.setStatus(status);
         return response;
     }
 
@@ -54,6 +68,20 @@ public class ResponseBuilder {
     public static <T> Response<T> fail(String msg) {
         Response<T> response = fail();
         response.setMsg(msg);
+        response.setStatus(-1);
+        return response;
+    }
+
+    /**
+     * 带status的响应错误封装
+     * @param msg
+     * @param status
+     * @param <T>
+     * @return
+     */
+    public static <T> Response<T> fail(String msg, int status) {
+        Response<T> response = fail(msg);
+        response.setStatus(status);
         return response;
     }
 }

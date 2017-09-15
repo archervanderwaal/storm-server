@@ -100,7 +100,10 @@ public class StormApplication {
      * @throws InstantiationException
      */
     private static StormApplicationRunListeners getListeners(Environment environment) {
-        Set<Class<? extends StormApplicationRunListener>> listenerClasses = classScanner.getSubClassesOfClassPath(StormApplicationRunListener.class);
+        Set<Class<? extends StormApplicationRunListener>> listenerClasses = classScanner.getSubClassesOf("me.stormma", StormApplicationRunListener.class);
+        if (!environment.getStormApplicationComponentScanPackage().equals("me.stormma")) {
+            listenerClasses.addAll(classScanner.getSubClassesOf(environment.getStormApplicationComponentScanPackage(), StormApplicationRunListener.class));
+        }
         Set<Class<? extends StormApplicationRunListener>> removeListeners = new HashSet<>();
         for (Class<? extends StormApplicationRunListener> clazz : listenerClasses) {
             if (AbstractStormApplicationRunListener.class == clazz || StormApplicationEnvironmentRunListener.class == clazz

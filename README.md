@@ -1,10 +1,14 @@
 #### storm-server
 
-##### 什么是storm-server?为什么有storm-server
-> storm-server,以jetty为内置servlet容器的一个java web框架，主要用于java提供api服务来使用，参数传递和请求的响应的数据类型都是JSON，
-storm-server设计的初衷就是练习自己实现一个轻量级的框架(或许这压根算不上是一个框架)，或许后面可以用于自己项目中，快速开发出适用于自己系统的
-后端服务。storm-server后期会继续维护，增加其他的功能，当然如果有人感兴趣，也可以加入项目中，贡献自己的一份力。
+```java
+/**
+ * @author stormma
+ * @date 2017/09/14
+ */
+```
 
+##### storm-server介绍
+> storm-server, 以jetty为servlet容器的一个java web框架, 主要用于为前端提供api服务, 具有快速开发的优势。
 ##### 怎么用
 1. 引入依赖，当然后期会将项目发布到maven中心仓库。
 2. 新建项目入口类
@@ -71,3 +75,47 @@ storm.ansi.output.enabled=true
 ##### 结束语
 > storm-server开发已有一周时间，很多核心的功能还没有实现，后期会加入ioc等功能，storm-server第一版开发完成之后，会发布到maven仓库，欢迎
 各位使用，以及参与storm-server的开发，期待你的参与与建议。
+
+
+
+<!-- Javadoc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.2.2</version>
+                <configuration>
+                    <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
+                </configuration>
+            </plugin>
+
+            <!-- GPG -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>

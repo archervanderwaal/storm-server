@@ -1,28 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.stormma</groupId>
-    <artifactId>smart-server</artifactId>
-    <packaging>pom</packaging>
-    <version>V1.0.0</version>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-    <modules>
-        <module>storm-server-test</module>
-    </modules>
+    <artifactId>storm-server</artifactId>
+    <packaging>jar</packaging>
+    <version>0.4-SNAPSHOT</version>
+    <name>storm-server</name>
+    <url>https://github.com/stormmaybin/storm-server</url>
+    <description>A simple java web framework.</description>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git@github.com:stormmaybin/storm-server.git</connection>
+        <developerConnection>scm:git:git@github.com:stormmaybin/storm-server.git</developerConnection>
+        <url>git@github.com:stormmaybin/storm-server.git</url>
+      <tag>HEAD</tag>
+  </scm>
+
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/stormmaybin/storm-server/issues</url>
+    </issueManagement>
+
+    <developers>
+        <developer>
+            <name>stormma</name>
+            <url>http://blog.stormma.me</url>
+            <email>stormmaybin@gmail.com</email>
+            <organization>personal</organization>
+        </developer>
+    </developers>
 
     <properties>
         <jetty.version>9.2.22.v20170606</jetty.version>
@@ -37,18 +52,6 @@
         <servlet.version>3.1.0</servlet.version>
         <reflections.version>0.9.11</reflections.version>
     </properties>
-
-
-    <developers>
-        <developer>
-            <id>stormma</id>
-            <name>mayongbin</name>
-            <url>http://blog.stormma.me</url>
-            <email>stormmaybin@gmail.com</email>
-            <organization>personal</organization>
-        </developer>
-    </developers>
-
     <dependencies>
         <!--Servlet-->
         <dependency>
@@ -162,6 +165,68 @@
             <artifactId>org.apache.commons.io</artifactId>
             <version>${commons-lang.version}</version>
         </dependency>
-
     </dependencies>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus snapshot repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Sonatype Nexus release repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <build>
+        <plugins>
+            <!--compiler-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <verbose>true</verbose>
+                    <encoding>UTF-8</encoding>
+                    <showWarnings>true</showWarnings>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.4</version>
+                        <configuration>
+                            <passphrase>${gpg.passphrase}</passphrase>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

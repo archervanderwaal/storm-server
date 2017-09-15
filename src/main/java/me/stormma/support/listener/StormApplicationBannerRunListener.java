@@ -33,9 +33,6 @@ public class StormApplicationBannerRunListener extends AbstractStormApplicationR
         if (logger == null) {
             logger = LoggerFactory.getLogger(StormApplication.class);
         }
-        logger.info(String.format("Starting %s on %s (%s) by %s", clazz.getName().substring(clazz.getName()
-                        .lastIndexOf(".") + 1, clazz.getName().length()), EnvironmentUtils.getOsName(), EnvironmentUtils.getProjectOutputDir(),
-                EnvironmentUtils.getAuthor()));
     }
 
     @Override

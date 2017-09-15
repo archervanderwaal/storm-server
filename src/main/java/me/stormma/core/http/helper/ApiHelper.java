@@ -3,6 +3,7 @@ package me.stormma.core.http.helper;
 import com.google.common.base.Objects;
 import me.stormma.core.http.annotation.Api;
 import me.stormma.core.http.handler.Handler;
+import me.stormma.exception.StormServerException;
 import me.stormma.ioc.annotation.Controller;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class ApiHelper {
      * @param basePackageName
      * @description init api map
      */
-    public static Map<String, Handler> initApiMap(String basePackageName) {
+    public static Map<String, Handler> initApiMap(String basePackageName) throws StormServerException {
         Map<String, Handler> apiMap = new LinkedHashMap<>();
         Reflections reflections = new Reflections(basePackageName);
         Set<Class<?>> apiClasses = reflections.getTypesAnnotatedWith(Controller.class);
@@ -51,6 +52,9 @@ public class ApiHelper {
                     urlStart = urlStart.startsWith("/") ? urlStart : "/" + urlStart;
                     String finalUrl = urlStart + (urlEnd.endsWith("/") ? urlEnd
                             .substring(0, urlEnd.length() - 1) : urlEnd);
+                    if (apiMap.get(finalUrl) != null) {
+                        throw new StormServerException(String.format("%s url mapped failed, because %s have existed.", method, finalUrl));
+                    }
                     apiMap.put(finalUrl, handler);
                 }
             }
