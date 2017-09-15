@@ -5,7 +5,7 @@
     <groupId>me.stormma</groupId>
     <artifactId>storm-server</artifactId>
     <packaging>jar</packaging>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <name>storm-server</name>
     <url>https://github.com/stormmaybin/storm-server</url>
     <description>A simple java web framework.</description>
@@ -239,6 +239,9 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>1.4</version>
+                        <configuration>
+                            <passphrase>${gpg.passphrase}</passphrase>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
