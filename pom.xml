@@ -5,7 +5,7 @@
     <groupId>me.stormma</groupId>
     <artifactId>storm-server</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <name>storm-server</name>
     <url>https://github.com/stormmaybin/storm-server</url>
     <description>A simple java web framework.</description>
