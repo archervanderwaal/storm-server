@@ -60,7 +60,7 @@ public class StormApplication {
         apiGateway = ApiGateway.getInstance();
         HttpService.init();
         HttpService.getInstance().registerServlet("/", apiGateway);
-        logger.info("storm-server start success. listen on " + StormApplicationConfig.PORT);
+        logger.info("storm-server start success and listen on " + StormApplicationConfig.PORT);
         HttpService.startJettyServer();
     }
 

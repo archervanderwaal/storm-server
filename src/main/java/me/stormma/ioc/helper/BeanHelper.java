@@ -69,7 +69,9 @@ public class BeanHelper {
      * @param beans
      */
     private static void logAllBeans(Set<Class<?>> beans) {
-        logger.info("bean ");
+        for (Class<?> bean: beans) {
+            logger.info("bean register success ['{}']", bean);
+        }
     }
 
     /**
