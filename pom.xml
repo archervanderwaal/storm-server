@@ -5,7 +5,7 @@
     <groupId>me.stormma</groupId>
     <artifactId>storm-server</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.1</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>storm-server</name>
     <url>https://github.com/stormmaybin/storm-server</url>
     <description>A simple java web framework.</description>
@@ -22,7 +22,6 @@
         <connection>scm:git:git@github.com:stormmaybin/storm-server.git</connection>
         <developerConnection>scm:git:git@github.com:stormmaybin/storm-server.git</developerConnection>
         <url>git@github.com:stormmaybin/storm-server.git</url>
-      <tag>HEAD</tag>
   </scm>
 
     <issueManagement>
