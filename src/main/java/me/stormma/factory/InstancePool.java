@@ -24,7 +24,7 @@ public class InstancePool {
     /**
      * save instance
      */
-    private static final Map<String, Object> instancePool = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Object> instancePool = new ConcurrentHashMap<>();
 
     /**
      * HandlerMapping
